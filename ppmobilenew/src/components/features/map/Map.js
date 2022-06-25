@@ -6,23 +6,19 @@ MapboxGL.setAccessToken(
   'pk.eyJ1IjoibWJ5cm5lNTEwIiwiYSI6ImNsNDQ3MDYxODA5a2wza3A3NTdydmp1bG0ifQ.FEbWBlXPfSgUt-Aibs5bUg',
 );
 
-const Map = props => {
-  const [coordinates] = useState([-122.23432, 37.23432]);
+const Map = () => {
+  const [coordinates] = useState([8.674252499999994, 9.0845755]);
+
   return (
-    // <View style={styles.page}>
-    //   <View style={styles.container}>
-    <MapboxGL.MapView>
-      <MapboxGL.Camera centerCoordinate={coordinates} />
-      {/* <MapboxGL.PointAnnotation coordinate={coordinates} /> */}
+    <MapboxGL.MapView style={styles.map}>
+      <MapboxGL.Camera zoomLevel={6} centerCoordinate={coordinates} />
     </MapboxGL.MapView>
-    //   </View>
-    // </View>
   );
 };
 
 const styles = StyleSheet.create({
   map: {
-    flex: 2,
+    flex: 1,
   },
 });
 
