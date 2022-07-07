@@ -7,7 +7,7 @@ MapboxGL.setAccessToken(
 );
 
 const Map = () => {
-  const [coordinates] = useState([8.674252499999994, 9.0845755]);
+  const [coordinates] = useState([-119.6982, 34.4208]);
 
   return (
     <MapboxGL.MapView style={styles.map}>
@@ -16,10 +16,10 @@ const Map = () => {
   );
 };
 
+export default Map;
+
 const styles = StyleSheet.create({
   map: {
     flex: 1,
   },
 });
-
-export default Map;

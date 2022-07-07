@@ -44,13 +44,13 @@ function TopLogo({navigation, back}) {
           rx={18.75}
           ry={17}
           transform="matrix(.89174 0 0 .93868 216.762 134.44)"
-          fill="#d2dbed"
+          fill="white"
         />
         <Ellipse
           rx={18.75}
           ry={17}
           transform="matrix(.89174 0 0 .93868 254.174 134.44)"
-          fill="#d2dbed"
+          fill="white"
         />
       </Svg>
     </Surface>
