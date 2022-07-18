@@ -1,3 +1,9 @@
 node_modules
 
 pptok.txt
+
+.expo-shared
+
+./ppserver/aws
+./ppserver/awscliv2.zip
+

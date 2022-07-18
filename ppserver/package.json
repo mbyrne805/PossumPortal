@@ -1,0 +1,12 @@
+{
+  "dependencies": {
+    "apollo-datasource-mongodb": "^0.5.4",
+    "apollo-server": "^3.10.0",
+    "expo-dev-client": "^0.9.6",
+    "graphql": "^15.8.0",
+    "graphql-tools": "^8.3.0",
+    "latest": "^0.2.0",
+    "nodemon": "^2.0.19"
+  },
+  "type": "module"
+}
