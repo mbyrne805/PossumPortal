@@ -7,3 +7,4 @@ pptok.txt
 ./ppserver/aws
 ./ppserver/awscliv2.zip
 
+.env

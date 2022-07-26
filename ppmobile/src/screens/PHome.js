@@ -14,9 +14,9 @@ const PHome = () => {
       <View style={styles.logo}>
         <TopLogo />
       </View>
-      <View style={styles.immerse}>
+      {/* <View style={styles.immerse}>
         <ImmerseButton />
-      </View>
+      </View> */}
       <View style={styles.projects}>
         <ProjectsButton />
       </View>

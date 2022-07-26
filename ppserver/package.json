@@ -2,11 +2,23 @@
   "dependencies": {
     "apollo-datasource-mongodb": "^0.5.4",
     "apollo-server": "^3.10.0",
+    "dotenv": "^16.0.1",
     "expo-dev-client": "^0.9.6",
     "graphql": "^15.8.0",
     "graphql-tools": "^8.3.0",
     "latest": "^0.2.0",
-    "nodemon": "^2.0.19"
+    "mongoose": "^6.4.6",
+    "nodemon": "^2.0.19",
+    "rimraf": "^3.0.2"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.18.9",
+    "@babel/core": "^7.18.9",
+    "@babel/node": "^7.18.9",
+    "@babel/preset-env": "^7.18.9"
+  },
+  "scripts": {
+    "start:dev": "babel-node src/server.js"
   },
   "type": "module"
 }
