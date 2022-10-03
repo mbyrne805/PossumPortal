@@ -7,11 +7,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "http://localhost:8081")
 @RequestMapping("/api")
 public class MainController {
     private final MapService mapService;
@@ -34,6 +36,10 @@ public class MainController {
     @PostMapping("/trash")
     public ResponseEntity<Trash> saveTrash(@RequestBody Trash trashPolygon) {
         try {
+            LocalDateTime now = LocalDateTime.now();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            String formatted = now.format(formatter);
+            trashPolygon.setDate(formatted);
             Trash trashResult = mapService.saveTrash(trashPolygon);
             return ResponseEntity.ok(trashResult);
         } catch (IllegalArgumentException e) {

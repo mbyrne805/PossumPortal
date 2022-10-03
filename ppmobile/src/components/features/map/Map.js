@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {StyleSheet, View} from 'react-native';
+import axios from 'axios';
 import MapboxGL from '@react-native-mapbox-gl/maps';
 import MapboxDirectionsFactory from '@mapbox/mapbox-sdk/services/directions';
 import {lineString as makeLineString} from '@turf/helpers';
@@ -43,20 +44,60 @@ const Map = () => {
   //   setRoute(newRoute);
   // };
 
-  const [polygon, setPolygon] = useState({
-    type: 'Feature',
-    geometry: {
-      type: 'Polygon',
-      coordinates: [
-        [
-          [-119.69804, 34.43206],
-          [-119.6984, 34.43192],
-          [-119.697609, 34.431392],
-          [-119.69759, 34.43179],
-        ],
-      ],
-    },
-  });
+  // const [polygons, setPolygons] = useState({
+  //   type: 'Feature',
+  //   geometry: {
+  //     type: 'Polygon',
+  //     coordinates: [
+  //       [
+  //         [-119.69804, 34.43206],
+  //         [-119.6984, 34.43192],
+  //         [-119.697609, 34.431392],
+  //         [-119.69759, 34.43179],
+  //       ],
+  //       [
+  //         [-119.682314, 34.429681],
+  //         [-119.681646, 34.429227],
+  //         [-119.680949, 34.429405],
+  //         [-119.681827, 34.429653],
+  //       ],
+  //     ],
+  //   },
+  // });
+
+  const [trashPolygons, setTrashPolygons] = useState("");
+
+  // const polygonsToDisplay = polygons.map((polygon, i) => {
+  //   console.log(polygon);
+  //   return (
+  //     <MapboxGL.ShapeSource id={`source${i}`} shape={polygon}>
+  //       <MapboxGL.FillLayer id="fill" style={styles.polygonFill} />
+  //       <MapboxGL.LineLayer id="line" style={styles.polygonLine} />
+  //     </MapboxGL.ShapeSource>
+  //   )
+  // });
+
+  useEffect(() => {
+    const getData = async () => {
+      const results = await axios(
+        'http://10.0.2.2:8080/api/trash'
+      );
+      const savedTrashPolygons = [];
+      results.data.forEach(result => {
+        savedTrashPolygons.push(result.polygonCoords);
+      });
+      console.log('test');
+      console.log(savedTrashPolygons);
+      setTrashPolygons({
+        type: 'Feature',
+        geometry: {
+          type: 'Polygon',
+          coordinates: savedTrashPolygons,
+        },
+      });
+    };
+    getData();
+  }, []);
 
   return (
     <MapboxGL.MapView style={styles.map}>
@@ -67,10 +108,12 @@ const Map = () => {
           <MapboxGL.LineLayer id="lineLayer" style={styles.line} />
         </MapboxGL.ShapeSource>
       )} */}
-      <MapboxGL.ShapeSource id="source" shape={polygon}>
-        <MapboxGL.FillLayer id="fill" style={styles.polygonFill} />
-        <MapboxGL.LineLayer id="line" style={styles.polygonLine} />
-      </MapboxGL.ShapeSource>
+      {trashPolygons ? 
+        <MapboxGL.ShapeSource id="source" shape={trashPolygons}>
+          <MapboxGL.FillLayer id="fill" style={styles.polygonFill} />
+          <MapboxGL.LineLayer id="line" style={styles.polygonLine} />
+        </MapboxGL.ShapeSource> : <></>
+      }
     </MapboxGL.MapView>
   );
 };

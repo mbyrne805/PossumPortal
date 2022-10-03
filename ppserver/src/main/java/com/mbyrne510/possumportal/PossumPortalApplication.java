@@ -14,7 +14,7 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 @EnableMongoRepositories
 public class PossumPortalApplication implements CommandLineRunner {
 	@Autowired
-	private TrashRepository trashRepository;
+	private TrashRepository trashRepo;
 
 	public static void main(String[] args) {
 		SpringApplication.run(PossumPortalApplication.class, args);
@@ -23,7 +23,7 @@ public class PossumPortalApplication implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 		System.out.println("Current trash results:");
-		for (Trash trashResult : trashRepository.findAll()) {
+		for (Trash trashResult : trashRepo.findAll()) {
 			System.out.println(trashResult);
 		}
 	}

@@ -5,6 +5,10 @@ import com.mbyrne510.possumportal.repositories.map.TrashRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 @Service
 public class MapServiceImpl implements MapService {
     private final TrashRepository trashRepo;
@@ -22,5 +26,16 @@ public class MapServiceImpl implements MapService {
         } catch (IllegalArgumentException e) {
             throw e;
         }
+    }
+
+    @Override
+    public Optional<List<Trash>> getAllTrash() {
+        List<Trash> trashResults = new ArrayList<>();
+        Iterable<Trash> trashIterable = trashRepo.findAll();
+        for (Trash trashResult : trashIterable) {
+            trashResults.add(trashResult);
+        }
+        System.out.println(trashIterable);
+        return Optional.of(trashResults);
     }
 }

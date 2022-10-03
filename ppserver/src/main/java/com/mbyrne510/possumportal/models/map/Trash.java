@@ -20,9 +20,9 @@ public class Trash {
     @Id
     private String id;
 
-    private List<List<Long>> polygonCoords;
+    private List<List<Double>> polygonCoords;
 
-    private LocalDateTime date;
+    private String date;
 
     private String category;
 }
