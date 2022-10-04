@@ -2,9 +2,12 @@ import React from 'react';
 import {StyleSheet, TouchableOpacity} from 'react-native';
 import {Button} from 'react-native-paper';
 
-const ProjectSaveButton = () => (
+const ProjectSaveButton = (props) => (
   <TouchableOpacity>
-    <Button style={styles.button} labelStyle={styles.text}>
+    <Button
+      style={styles.button}
+      labelStyle={styles.text}
+      onPress={() => props.onPress()}>
       {' '}
       Save to db?{' '}
     </Button>
@@ -15,7 +18,7 @@ export default ProjectSaveButton;
 
 const styles = StyleSheet.create({
   button: {
-    backgroundColor: '#34EB83',
+    backgroundColor: '#3D9970',
   },
   text: {
     color: 'white',

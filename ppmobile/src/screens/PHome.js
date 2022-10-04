@@ -10,34 +10,31 @@ import TopLogo from '../components/common/TopLogo';
 
 const PHome = () => {
   const [polygonToSave, setPolygonToSave] = useState(false);
+  const [polygonSaveRequested, setPolygonSaveRequested] = useState(false);
 
   const registerPolygonSave = () => {
     setPolygonToSave(true);
   };
 
+  const registerPolygonSaveRequest = () => {
+    console.log('test');
+    setPolygonSaveRequested(true)
+  }
+
   return (
     <View style={styles.container}>
-      <Map registerPolygonSave={registerPolygonSave}/>
+      <Map 
+        registerPolygonSave={registerPolygonSave}
+        polygonSaveRequested={polygonSaveRequested}/>
       <View style={styles.logo}>
-        <TopLogo />
+        {polygonToSave ? <ProjectSaveButton onPress={registerPolygonSaveRequest}/> : <TopLogo />}
       </View>
-      {/* <View style={styles.immerse}>
-        <ImmerseButton />
-      </View> */}
-      {
-        polygonToSave ? 
-        <View style={styles.projectSaveButton}>
-          <ProjectSaveButton />
-        </View> :
-        <></>
-      }
       <View style={styles.projects}>
         <ProjectsButton />
       </View>
       <ProjectsFilter
         data={[{title: 'Trash'}, {title: 'Fire'}, {title: 'Eco'}]}
       />
-      {/* <Chat /> */}
     </View>
   );
 };
@@ -62,7 +59,7 @@ const styles = StyleSheet.create({
   projectSaveButton: {
     position: 'absolute',
     right: 25,
-    bottom: 90,
+    bottom: 100,
   },
   projects: {
     position: 'absolute',

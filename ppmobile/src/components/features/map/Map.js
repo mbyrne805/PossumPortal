@@ -6,10 +6,9 @@ import {lineString as makeLineString} from '@turf/helpers';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faCoffee } from '@fortawesome/free-solid-svg-icons';
 
+MapboxGL.setWellKnownTileServer('Mapbox');
 MapboxGL.setAccessToken(
   'pk.eyJ1IjoibWJ5cm5lNTEwIiwiYSI6ImNsNDQ3MDYxODA5a2wza3A3NTdydmp1bG0ifQ.FEbWBlXPfSgUt-Aibs5bUg');
-
-MapboxGL.setWellKnownTileServer('Mapbox');
 
 const Map = (props) => {
   const center = [-119.5489, 34.4345];
@@ -18,10 +17,8 @@ const Map = (props) => {
   const [trashCoords, setTrashCoords] = useState([]);
 
   useEffect(() => {
-    const getTrashData = async () => {
-      const results = await axios(
-        'http://10.0.2.2:8080/api/trash'
-      );
+    const getTrashPolygons = async () => {
+      const results = await axios('http://10.0.2.2:8080/api/trash');
       const savedTrashPolygons = [];
       results.data.forEach(result => {
         savedTrashPolygons.push(result.polygonCoords);
@@ -34,8 +31,19 @@ const Map = (props) => {
         },
       });
     };
-    getTrashData();
+    getTrashPolygons();
   }, []);
+
+  useEffect(() => {
+    const saveTrashPolygon = async () => {
+      const result = await axios.post('http://10.0.2.2:8080/api/trash', {
+        polygonCoords: trashCoords[0],
+        severity: "heavy",
+      });
+      console.log(result);
+    };
+    saveTrashPolygon();
+  });
 
   const saveTrashCoords = (feature) => {
     let trashCoordsCopy;
@@ -50,16 +58,17 @@ const Map = (props) => {
 
   const renderTrashPoints = () => {
     return trashCoords.map((point, index) => (
-        <MapboxGL.PointAnnotation
-          id={`${index}-trashPoint`}
-          coordinate={point}
-          key={`${index}-trashPoint`}
-          style={styles.point}>
-          <View />
-        </MapboxGL.PointAnnotation>
+      <MapboxGL.PointAnnotation
+        id={`${index}-trashPoint`}
+        coordinate={point}
+        key={`${index}-trashPoint`}
+        style={styles.point}>
+        <View />
+      </MapboxGL.PointAnnotation>
     ));
   }
 
+  console.log([trashCoords]);
   console.log(trashCoords.length);
 
   return (
@@ -67,22 +76,22 @@ const Map = (props) => {
       style={styles.map}
       onPress={feature => {
         saveTrashCoords(feature);
-        // trashCoords.length >= 2 && props.registerPolygonSave();
+        trashCoords.length >= 2 && props.registerPolygonSave();
       }}
     >
       <MapboxGL.Camera zoomLevel={6} centerCoordinate={center} />
       {renderTrashPoints()}
-      {/* {trashPolygons ?
+      {trashPolygons ?
         <MapboxGL.ShapeSource id="source" shape={trashPolygons}>
           <MapboxGL.FillLayer id="fill" style={styles.polygonFill} />
           <MapboxGL.LineLayer id="line" style={styles.polygonLine} />
-        </MapboxGL.ShapeSource> : <></>} */}
-      {trashCoords.length >= 3 ?
+        </MapboxGL.ShapeSource> : <></>}
+      {trashCoords.length >= 2 ?
         <MapboxGL.ShapeSource id="source" shape={{
           type: 'Feature',
           geometry: {
             type: 'Polygon',
-            coordinates: trashCoords,
+            coordinates: [trashCoords],
           }
         }}>
           <MapboxGL.FillLayer id="fill" style={styles.polygonFill} />
