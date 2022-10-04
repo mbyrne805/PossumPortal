@@ -24,5 +24,5 @@ public class Trash {
 
     private String date;
 
-    private String category;
+    private String severity;
 }

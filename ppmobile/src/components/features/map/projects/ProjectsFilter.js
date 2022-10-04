@@ -10,6 +10,7 @@ const ProjectsFilter = ({data, onValueChange}) => {
       {data.map((x, i) => (
         <ProjectsFilterButton
           text={x.title}
+          key={i}
           id={i}
           selectedIndices={selectedIndices}
           callback={id => {

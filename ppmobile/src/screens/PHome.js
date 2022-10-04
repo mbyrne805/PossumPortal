@@ -1,22 +1,36 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 // import Chat from '../components/features/chat/Chat';
 import ImmerseButton from '../components/features/map/immerse/ImmerseButton';
 import Map from '../components/features/map/Map';
+import ProjectSaveButton from '../components/features/map/projects/ProjectSaveButton';
 import ProjectsButton from '../components/features/map/projects/ProjectsButton';
 import ProjectsFilter from '../components/features/map/projects/ProjectsFilter';
 import TopLogo from '../components/common/TopLogo';
 
 const PHome = () => {
+  const [polygonToSave, setPolygonToSave] = useState(false);
+
+  const registerPolygonSave = () => {
+    setPolygonToSave(true);
+  };
+
   return (
     <View style={styles.container}>
-      <Map />
+      <Map registerPolygonSave={registerPolygonSave}/>
       <View style={styles.logo}>
         <TopLogo />
       </View>
       {/* <View style={styles.immerse}>
         <ImmerseButton />
       </View> */}
+      {
+        polygonToSave ? 
+        <View style={styles.projectSaveButton}>
+          <ProjectSaveButton />
+        </View> :
+        <></>
+      }
       <View style={styles.projects}>
         <ProjectsButton />
       </View>
@@ -44,6 +58,11 @@ const styles = StyleSheet.create({
     position: 'absolute',
     left: 25,
     bottom: 50,
+  },
+  projectSaveButton: {
+    position: 'absolute',
+    right: 25,
+    bottom: 90,
   },
   projects: {
     position: 'absolute',

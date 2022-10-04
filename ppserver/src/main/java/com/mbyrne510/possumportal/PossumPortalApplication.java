@@ -27,5 +27,4 @@ public class PossumPortalApplication implements CommandLineRunner {
 			System.out.println(trashResult);
 		}
 	}
-
 }
