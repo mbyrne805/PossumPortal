@@ -2,9 +2,6 @@ import React, {useState, useEffect} from 'react';
 import {StyleSheet, View} from 'react-native';
 import axios from 'axios';
 import MapboxGL from '@rnmapbox/maps';
-import {lineString as makeLineString} from '@turf/helpers';
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { faCoffee } from '@fortawesome/free-solid-svg-icons';
 
 MapboxGL.setWellKnownTileServer('Mapbox');
 MapboxGL.setAccessToken(
@@ -14,7 +11,7 @@ const Map = (props) => {
   const center = [-119.5489, 34.4345];
 
   const [trashPolygons, setTrashPolygons] = useState("");
-  const [trashCoords, setTrashCoords] = useState([]);
+  const [newPolygonCoords, setNewPolygonCoords] = useState([]);
 
   useEffect(() => {
     const getTrashPolygons = async () => {
@@ -35,29 +32,32 @@ const Map = (props) => {
   }, []);
 
   useEffect(() => {
-    const saveTrashPolygon = async () => {
-      const result = await axios.post('http://10.0.2.2:8080/api/trash', {
-        polygonCoords: trashCoords[0],
-        severity: "heavy",
-      });
-      console.log(result);
-    };
-    saveTrashPolygon();
+    if (props.polygonSaveRequested) {
+      const saveTrashPolygon = async () => {
+        const result = await axios.post('http://10.0.2.2:8080/api/trash', {
+          polygonCoords: newPolygonCoords,
+          severity: "heavy",
+        });
+        console.log(result.data);
+        props.registerPolygonSave();
+      };
+      saveTrashPolygon();
+    }
   });
 
-  const saveTrashCoords = (feature) => {
-    let trashCoordsCopy;
-    if (trashCoords.length === 0) {
-      trashCoordsCopy = [];
+  const saveNewPolygonCoords = (feature) => {
+    let newPolygonCoordsCopy;
+    if (newPolygonCoords.length === 0) {
+      newPolygonCoordsCopy = [];
     } else {
-      trashCoordsCopy = [...trashCoords];
+      newPolygonCoordsCopy = [...newPolygonCoords];
     }
-    trashCoordsCopy.push(feature.geometry.coordinates);
-    setTrashCoords(trashCoordsCopy);
+    newPolygonCoordsCopy.push(feature.geometry.coordinates);
+    setNewPolygonCoords(newPolygonCoordsCopy);
   };
 
   const renderTrashPoints = () => {
-    return trashCoords.map((point, index) => (
+    return newPolygonCoords.map((point, index) => (
       <MapboxGL.PointAnnotation
         id={`${index}-trashPoint`}
         coordinate={point}
@@ -68,15 +68,15 @@ const Map = (props) => {
     ));
   }
 
-  console.log([trashCoords]);
-  console.log(trashCoords.length);
+  console.log([newPolygonCoords]);
+  console.log(newPolygonCoords.length);
 
   return (
     <MapboxGL.MapView
       style={styles.map}
       onPress={feature => {
-        saveTrashCoords(feature);
-        trashCoords.length >= 2 && props.registerPolygonSave();
+        saveNewPolygonCoords(feature);
+        newPolygonCoords.length >= 2 && props.registerNewPolygon();
       }}
     >
       <MapboxGL.Camera zoomLevel={6} centerCoordinate={center} />
@@ -86,12 +86,12 @@ const Map = (props) => {
           <MapboxGL.FillLayer id="fill" style={styles.polygonFill} />
           <MapboxGL.LineLayer id="line" style={styles.polygonLine} />
         </MapboxGL.ShapeSource> : <></>}
-      {trashCoords.length >= 2 ?
+      {newPolygonCoords.length >= 2 ?
         <MapboxGL.ShapeSource id="source" shape={{
           type: 'Feature',
           geometry: {
             type: 'Polygon',
-            coordinates: [trashCoords],
+            coordinates: [newPolygonCoords],
           }
         }}>
           <MapboxGL.FillLayer id="fill" style={styles.polygonFill} />

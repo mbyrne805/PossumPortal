@@ -1,6 +1,5 @@
 import React, {useState} from 'react';
 import {StyleSheet, View} from 'react-native';
-// import Chat from '../components/features/chat/Chat';
 import ImmerseButton from '../components/features/map/immerse/ImmerseButton';
 import Map from '../components/features/map/Map';
 import ProjectSaveButton from '../components/features/map/projects/ProjectSaveButton';
@@ -9,25 +8,32 @@ import ProjectsFilter from '../components/features/map/projects/ProjectsFilter';
 import TopLogo from '../components/common/TopLogo';
 
 const PHome = () => {
-  const [polygonToSave, setPolygonToSave] = useState(false);
+  const [newPolygon, setNewPolygon] = useState(false);
   const [polygonSaveRequested, setPolygonSaveRequested] = useState(false);
+  const [polygonSave, setPolygonSave] = useState(false);
 
-  const registerPolygonSave = () => {
-    setPolygonToSave(true);
+  const registerNewPolygon = () => {
+    setNewPolygon(true);
   };
 
   const registerPolygonSaveRequest = () => {
-    console.log('test');
     setPolygonSaveRequested(true)
+  }
+
+  const registerPolygonSave = () => {
+    console.log('polygon saved');
+    setPolygonSaveRequested(false);
+    setPolygonSave(true);
   }
 
   return (
     <View style={styles.container}>
       <Map 
-        registerPolygonSave={registerPolygonSave}
-        polygonSaveRequested={polygonSaveRequested}/>
+        registerNewPolygon={registerNewPolygon}
+        polygonSaveRequested={polygonSaveRequested}
+        registerPolygonSave={registerPolygonSave}/>
       <View style={styles.logo}>
-        {polygonToSave ? <ProjectSaveButton onPress={registerPolygonSaveRequest}/> : <TopLogo />}
+        {newPolygon ? <ProjectSaveButton onPress={registerPolygonSaveRequest}/> : <TopLogo />}
       </View>
       <View style={styles.projects}>
         <ProjectsButton />
