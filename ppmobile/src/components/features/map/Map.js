@@ -4,10 +4,7 @@ import MapboxGL from '@react-native-mapbox-gl/maps';
 import MapboxDirectionsFactory from '@mapbox/mapbox-sdk/services/directions';
 import {lineString as makeLineString} from '@turf/helpers';
 
-const accessToken =
-  'pk.eyJ1IjoibWJ5cm5lNTEwIiwiYSI6ImNsNDQ3MDYxODA5a2wza3A3NTdydmp1bG0ifQ.FEbWBlXPfSgUt-Aibs5bUg';
-MapboxGL.setAccessToken(accessToken);
-// const directionsClient = MapboxDirectionsFactory({accessToken});
+MapboxGL.setAccessToken(process.env.MAPBOX_ACCESS_TOKEN);
 
 const Map = () => {
   // const startPoint = [-119.6982, 34.4208];
