@@ -2,9 +2,7 @@ import React, {useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import MapboxGL from '@react-native-mapbox-gl/maps';
 
-MapboxGL.setAccessToken(
-  'pk.eyJ1IjoibWJ5cm5lNTEwIiwiYSI6ImNsNDQ3MDYxODA5a2wza3A3NTdydmp1bG0ifQ.FEbWBlXPfSgUt-Aibs5bUg',
-);
+MapboxGL.setAccessToken(process.env.MAPBOX_ACCESS_TOKEN);
 
 const Map = () => {
   const [coordinates] = useState([-119.6982, 34.4208]);
