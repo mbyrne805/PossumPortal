@@ -4,8 +4,7 @@ import axios from 'axios';
 import MapboxGL from '@rnmapbox/maps';
 
 MapboxGL.setWellKnownTileServer('Mapbox');
-MapboxGL.setAccessToken(
-  'pk.eyJ1IjoibWJ5cm5lNTEwIiwiYSI6ImNsNDQ3MDYxODA5a2wza3A3NTdydmp1bG0ifQ.FEbWBlXPfSgUt-Aibs5bUg');
+MapboxGL.setAccessToken(process.env.MAPBOX_ACCESS_TOKEN);
 
 const Map = (props) => {
   const center = [-119.5489, 34.4345];
