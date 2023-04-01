@@ -5,6 +5,9 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import PHome from './screens/PHome';
 import TopLogo from './components/common/TopLogo';
+import * as dotenv from 'dotenv';
+
+dotenv.config();
 
 const Stack = createNativeStackNavigator();
 
