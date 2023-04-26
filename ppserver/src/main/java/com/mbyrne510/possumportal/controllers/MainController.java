@@ -1,6 +1,7 @@
 package com.mbyrne510.possumportal.controllers;
 
 import com.mbyrne510.possumportal.models.map.Trash;
+import com.mbyrne510.possumportal.models.map.geojson.TrashGeoJSON;
 import com.mbyrne510.possumportal.services.map.MapService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,10 +26,10 @@ public class MainController {
     }
 
     @GetMapping("/trash")
-    public ResponseEntity<List<Trash>> getAllTrash() {
-        Optional<List<Trash>> trashList = mapService.getAllTrash();
+    public ResponseEntity<Optional<HashMap<String, TrashGeoJSON>>> getAllTrash() {
+        Optional<HashMap<String, TrashGeoJSON>> trashList = mapService.getAllTrash();
         if (trashList.isPresent()) {
-            return ResponseEntity.ok(trashList.get());
+            return ResponseEntity.ok(trashList);
         } else {
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }

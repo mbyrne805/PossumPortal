@@ -8,7 +8,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.lang.reflect.Array;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @Getter
@@ -20,7 +23,7 @@ public class Trash {
     @Id
     private String id;
 
-    private List<List<Double>> polygonCoords;
+    private ArrayList<ArrayList<Double>> polygonCoords;
 
     private String date;
 

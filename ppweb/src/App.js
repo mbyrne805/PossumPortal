@@ -34,7 +34,7 @@ function App() {
       <title>Possum Portal</title>
       <meta name="viewport" content="initial-scale=1, width=device-width" />
     </Helmet>
-    <div style={{backgroundColor: "black"}}>
+    <div style={{backgroundColor: "#4A5553"}}>
       <div style={{width: '100%'}}>
         <Box sx={{display: 'grid', gridTemplateRows: '1fr 6fr'}}>
           <Item>
