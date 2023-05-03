@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:8081")
+@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/api")
 public class MainController {
     private final MapService mapService;
@@ -36,13 +36,13 @@ public class MainController {
     }
 
     @PostMapping("/trash")
-    public ResponseEntity<Trash> saveTrash(@RequestBody Trash trashPolygon) {
+    public ResponseEntity<TrashGeoJSON> saveTrash(@RequestBody TrashGeoJSON trashPolygon) {
         try {
-            LocalDateTime now = LocalDateTime.now();
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-            String formatted = now.format(formatter);
-            trashPolygon.setDate(formatted);
-            Trash trashResult = mapService.saveTrash(trashPolygon);
+//            LocalDateTime now = LocalDateTime.now();
+//            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+//            String formatted = now.format(formatter);
+//            trashPolygon.setDate(formatted);
+            TrashGeoJSON trashResult = mapService.saveTrash(trashPolygon);
             return ResponseEntity.ok(trashResult);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);

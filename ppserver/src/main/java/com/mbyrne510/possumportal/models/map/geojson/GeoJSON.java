@@ -2,6 +2,7 @@ package com.mbyrne510.possumportal.models.map.geojson;
 
 import com.mongodb.client.model.geojson.Geometry;
 import lombok.*;
+import org.springframework.data.annotation.Id;
 
 import java.util.ArrayList;
 
@@ -11,20 +12,22 @@ import java.util.ArrayList;
 @Builder
 @AllArgsConstructor
 public class GeoJSON {
+    @Id
+    private String id;
     private String type;
     private Geometry geometry;
 
-    public GeoJSON(String typeInp, String geometryTypeInp, ArrayList<ArrayList<Double>> geometryCoordsInp) {
+    public GeoJSON(String idInp, String typeInp, String geometryTypeInp, ArrayList<ArrayList<ArrayList<Double>>> geometryCoordsInp) {
+        id = idInp;
         type = typeInp;
         geometry = new Geometry(geometryTypeInp, geometryCoordsInp);
     }
 
     @Getter
-    @Setter
     private class Geometry {
         private String type;
-        private ArrayList<ArrayList<Double>> coordinates;
-        public Geometry(String typeInp, ArrayList<ArrayList<Double>> coordinatesInp) {
+        private ArrayList<ArrayList<ArrayList<Double>>> coordinates;
+        public Geometry(String typeInp,ArrayList<ArrayList<ArrayList<Double>>> coordinatesInp) {
             type = typeInp;
             coordinates = coordinatesInp;
         }

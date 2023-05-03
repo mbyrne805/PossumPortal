@@ -23,7 +23,7 @@ public class Trash {
     @Id
     private String id;
 
-    private ArrayList<ArrayList<Double>> polygonCoords;
+    private ArrayList<ArrayList<ArrayList<Double>>> polygonCoords;
 
     private String date;
 

@@ -23,10 +23,12 @@ public class MapServiceImpl implements MapService {
     }
 
     @Override
-    public Trash saveTrash(Trash trash) throws IllegalArgumentException {
+    public TrashGeoJSON saveTrash(TrashGeoJSON trashGeoJSON) throws IllegalArgumentException {
+        Trash trash = new Trash();
+        trash.setId(trashGeoJSON.getId());
         try {
-            Trash savedTrash = trashRepo.save(trash);
-            return savedTrash;
+            trashRepo.save(trash);
+            return trashGeoJSON;
         } catch (IllegalArgumentException e) {
             throw e;
         }
@@ -37,19 +39,18 @@ public class MapServiceImpl implements MapService {
         HashMap<String, TrashGeoJSON> trashResults = new HashMap<>();
         List<Trash> trashList = trashRepo.findAll();
         List<TrashGeoJSON> trashGeoJSONs = new ArrayList<>(trashList.size());
-
+        System.out.println(trashGeoJSONs.size());
         for (int i = 0; i < trashList.size(); i++) {
-            trashGeoJSONs.set(i, new TrashGeoJSON(
+            trashResults.put(trashList.get(i).getId(), new TrashGeoJSON(
+                trashList.get(i).getId(),
                 "Feature",
                 "Polygon",
                 trashList.get(i).getPolygonCoords(),
                 trashList.get(i).getDate(),
                 trashList.get(i).getSeverity()
-                ));
+            ));
         }
-        for (int i = 0; i < trashList.size(); i++) {
-            trashResults.put(trashList.get(i).getId(), trashGeoJSONs.get(i));
-        }
+        System.out.println(trashResults);
         return Optional.of(trashResults);
     }
 }
