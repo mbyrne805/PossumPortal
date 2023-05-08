@@ -19,7 +19,17 @@ export default function Mapper() {
   const [zoom, setZoom] = useState(14);
   const [features, setFeatures] = useState(null);
 
+  //maybe just convert it to Trash here
   const onUpdate = (e) => {
+    for (const f of e.features) {
+      axios.post('http://localhost:8080/api/trash', {
+        id: f.id,
+        type: "Feature",
+        properties: {severity: "Heavy"},
+        geometry: {coordinates: f.geometry.coordinates, type: "Polygon"}
+      });
+    }
+
     setFeatures(currFeatures => {
       const newFeatures = {...currFeatures};
       for (const f of e.features) {
@@ -29,7 +39,7 @@ export default function Mapper() {
     });
   }
   
-  const onDelete = useCallback(e => {
+  const onDelete = (e) => {
     setFeatures(currFeatures => {
       const newFeatures = {...currFeatures};
       for (const f of e.features) {
@@ -37,7 +47,7 @@ export default function Mapper() {
       }
       return newFeatures;
     });
-  }, []);
+  };
 
   useEffect(() => {
     if (map.current) return;
@@ -66,13 +76,15 @@ export default function Mapper() {
 
     const getTrashPolygons = async () => {
       const results = await axios('http://localhost:8080/api/trash');
-
+      console.log(results);
       for (let id in results.data) {
         console.log(results.data[id]);
         draw.add(results.data[id]);
       }
 
       setFeatures(results.data);
+
+      //https://stackoverflow.com/questions/60085087/add-onclick-to-a-mapbox-marker-element
     };
     getTrashPolygons();
   });

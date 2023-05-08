@@ -1,5 +1,7 @@
 package com.mbyrne510.possumportal.models.map.geojson;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -19,19 +21,20 @@ public class TrashGeoJSON extends GeoJSON {
         String typeInp,
         String geometryTypeInp,
         ArrayList<ArrayList<ArrayList<Double>>> geometryCoordsInp,
-        String addTimeInp,
         String severityInp) {
         super(idInp, typeInp, geometryTypeInp, geometryCoordsInp);
-        properties = new Properties(addTimeInp, severityInp);
+        this.properties = new Properties(severityInp);
     }
 
     @Getter
-    private class Properties {
-        private LocalDateTime addTime;
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static class Properties {
         private String severity;
-        public Properties(String addTimeInp, String severityInp) {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-            addTime = LocalDateTime.parse(addTimeInp, formatter);
+
+        private Properties(String severityInp) {
             severity = severityInp;
         }
     }

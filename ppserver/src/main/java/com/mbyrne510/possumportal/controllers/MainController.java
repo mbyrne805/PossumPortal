@@ -36,13 +36,11 @@ public class MainController {
     }
 
     @PostMapping("/trash")
-    public ResponseEntity<TrashGeoJSON> saveTrash(@RequestBody TrashGeoJSON trashPolygon) {
+    public ResponseEntity<TrashGeoJSON> saveTrash(@RequestBody TrashGeoJSON trashGeoJSON) {
+        System.out.println("test123");
+        System.out.println(trashGeoJSON);
         try {
-//            LocalDateTime now = LocalDateTime.now();
-//            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-//            String formatted = now.format(formatter);
-//            trashPolygon.setDate(formatted);
-            TrashGeoJSON trashResult = mapService.saveTrash(trashPolygon);
+            TrashGeoJSON trashResult = mapService.saveTrash(trashGeoJSON);
             return ResponseEntity.ok(trashResult);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);

@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Array;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -26,6 +28,12 @@ public class MapServiceImpl implements MapService {
     public TrashGeoJSON saveTrash(TrashGeoJSON trashGeoJSON) throws IllegalArgumentException {
         Trash trash = new Trash();
         trash.setId(trashGeoJSON.getId());
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String formatted = now.format(formatter);
+        trash.setDate(formatted);
+        trash.setSeverity(trashGeoJSON.getProperties().getSeverity());
+        trash.setPolygonCoords(trashGeoJSON.getGeometry().getCoordinates());
         try {
             trashRepo.save(trash);
             return trashGeoJSON;
@@ -46,7 +54,6 @@ public class MapServiceImpl implements MapService {
                 "Feature",
                 "Polygon",
                 trashList.get(i).getPolygonCoords(),
-                trashList.get(i).getDate(),
                 trashList.get(i).getSeverity()
             ));
         }
