@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {useState, useEffect, useCallback, useRef} from 'react';
+import {useState, useEffect, useRef} from 'react';
 import {createRoot} from 'react-dom/client';
 import Map, {Source, Layer} from 'react-map-gl';
 import axios from 'axios';
@@ -19,7 +19,6 @@ export default function Mapper() {
   const [zoom, setZoom] = useState(14);
   const [features, setFeatures] = useState(null);
 
-  //maybe just convert it to Trash here
   const onUpdate = (e) => {
     for (const f of e.features) {
       axios.post('http://localhost:8080/api/trash', {
@@ -76,14 +75,28 @@ export default function Mapper() {
 
     const getTrashPolygons = async () => {
       const results = await axios('http://localhost:8080/api/trash');
-      console.log(results);
+      let pgId;
       for (let id in results.data) {
-        console.log(results.data[id]);
-        draw.add(results.data[id]);
+        pgId = draw.add(results.data[id]);
       }
 
+      console.log(pgId);
+
+      map.current.on('load', function() {
+        map.current.addLayer({
+          'id': 'test',
+          'type': 'symbol',
+          'source': 'mapbox-gl-draw-hot',
+        });
+
+        map.current.on('click', 'test', function() {
+          console.log('create');
+        });
+      });
+      
       setFeatures(results.data);
 
+      //https://gist.github.com/dnseminara/0790e53cef9867e848e716937727ab18
       //https://stackoverflow.com/questions/60085087/add-onclick-to-a-mapbox-marker-element
     };
     getTrashPolygons();

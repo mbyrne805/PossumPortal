@@ -38,14 +38,30 @@ function TopBar() {
   };
 
   return (
-    <AppBar position="static">
+    <AppBar position="static" sx={{bgcolor: "#099148"}}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
+          <Typography
+            variant="h3"
+            noWrap
+            component="a"
+            href="/"
+            sx={{
+              display: { xs: 'none', md: 'flex' },
+              fontFamily: 'fantasy',
+              fontWeight: 700,
+              letterSpacing: '.9rem',
+              color: 'inherit',
+              textDecoration: 'none',
+            }}
+          >
+            Possum
+          </Typography>
           <SvgIcon
             fontSize="large"
             component={PPLogo}
             inheritViewBox
-            sx={{ display: { xs: 'none', md: 'flex' }, mr: 2 }}/>
+            sx={{ display: { xs: 'none', md: 'flex' }, mr: 2.25 }} />
           <Typography
             variant="h3"
             noWrap
@@ -61,7 +77,7 @@ function TopBar() {
               textDecoration: 'none',
             }}
           >
-            Possum Portal
+            Portal
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>

@@ -4,9 +4,10 @@ import { Helmet } from 'react-helmet';
 import TopBar from './components/layout/TopBar';
 import Mapper from './components/mapping/Mapper';
 import Box from '@mui/material/Box';
+import Container from '@mui/material/Container';
 
-function Item(BoxProps) {
-  const { sx, ...other } = BoxProps;
+function Item(props) {
+  const { sx, padding, ...other } = props;
   return (
     <Box
       sx={{
@@ -15,8 +16,6 @@ function Item(BoxProps) {
         border: '10px solid',
         borderColor: (theme) =>
           theme.palette.mode === 'dark' ? 'grey.800' : 'grey.300',
-        p: 1,
-        m: 1,
         borderRadius: 2,
         fontSize: '0.875rem',
         fontWeight: '700',
@@ -28,25 +27,21 @@ function Item(BoxProps) {
 }
 
 function App() {
-  return <>
-    <Helmet>
+  return (
+    /* <Helmet>
       <html lang="en" />
       <title>Possum Portal</title>
       <meta name="viewport" content="initial-scale=1, width=device-width" />
-    </Helmet>
-    <div style={{backgroundColor: "#4A5553"}}>
-      <div style={{width: '100%'}}>
-        <Box sx={{display: 'grid', gridTemplateRows: '1fr 6fr'}}>
-          <Item>
-            <TopBar/>
-          </Item>
-          <Item>
-            <Mapper/>
-          </Item>
-        </Box>
-      </div>
-    </div>
-  </>;
+    </Helmet> */
+    <Box bgcolor="#4A5553" padding={1}>
+      <Item marginBottom={1}>
+        <TopBar/>
+      </Item>
+      <Item>
+        <Mapper/>
+      </Item>
+    </Box>
+  );
 }
 
 export default App;
