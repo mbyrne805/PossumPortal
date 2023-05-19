@@ -3,6 +3,7 @@ import './App.css';
 import { Helmet } from 'react-helmet';
 import TopBar from './components/layout/TopBar';
 import Mapper from './components/mapping/Mapper';
+import CategorySelect from './components/mapping/Select';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 
@@ -26,19 +27,19 @@ function Item(props) {
   );
 }
 
+//use speed dial here
+
 function App() {
   return (
-    /* <Helmet>
-      <html lang="en" />
-      <title>Possum Portal</title>
-      <meta name="viewport" content="initial-scale=1, width=device-width" />
-    </Helmet> */
     <Box bgcolor="#4A5553" padding={1}>
       <Item marginBottom={1}>
         <TopBar/>
       </Item>
       <Item>
         <Mapper/>
+      </Item>
+      <Item>
+        <CategorySelect position="absolute"/>
       </Item>
     </Box>
   );

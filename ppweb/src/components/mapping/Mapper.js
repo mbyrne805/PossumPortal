@@ -7,6 +7,7 @@ import mapboxgl from '!mapbox-gl'; // eslint-disable-line import/no-webpack-load
 import MapboxDraw from '@mapbox/mapbox-gl-draw';
 import DrawControl from './DrawControl';
 import ControlPanel from './ControlPanel';
+// import {styles} from './styles/MapboxStyle';
 
 const TOKEN = 'pk.eyJ1IjoibWJ5cm5lNTEwIiwiYSI6ImNsNDQ3MDYxODA5a2wza3A3NTdydmp1bG0ifQ.FEbWBlXPfSgUt-Aibs5bUg';
 mapboxgl.accessToken = TOKEN;
@@ -18,35 +19,7 @@ export default function Mapper() {
   const [lat, setLat] = useState(34.44206);
   const [zoom, setZoom] = useState(14);
   const [features, setFeatures] = useState(null);
-
-  const onUpdate = (e) => {
-    for (const f of e.features) {
-      axios.post('http://localhost:8080/api/trash', {
-        id: f.id,
-        type: "Feature",
-        properties: {severity: "Heavy"},
-        geometry: {coordinates: f.geometry.coordinates, type: "Polygon"}
-      });
-    }
-
-    setFeatures(currFeatures => {
-      const newFeatures = {...currFeatures};
-      for (const f of e.features) {
-        newFeatures[f.id] = f;
-      }
-      return newFeatures;
-    });
-  }
-  
-  const onDelete = (e) => {
-    setFeatures(currFeatures => {
-      const newFeatures = {...currFeatures};
-      for (const f of e.features) {
-        delete newFeatures[f.id];
-      }
-      return newFeatures;
-    });
-  };
+  const [category, setCategory] = useState('trash');
 
   useEffect(() => {
     if (map.current) return;
@@ -72,6 +45,44 @@ export default function Mapper() {
     map.current.on('draw.create', onUpdate);
     map.current.on('draw.delete', onDelete);
     map.current.on('draw.update', onUpdate);
+
+    function changeColor(category, featureId) {
+      switch(category) {
+        case "trash":
+          draw.setFeatureProperty(featureId, 'portColor', '#880808')
+          break;
+      }
+    }
+
+    const onUpdate = (e) => {
+      for (const f of e.features) {
+        changeColor(category, f.id);
+        axios.post('http://localhost:8080/api/trash', {
+          id: f.id,
+          type: "Feature",
+          properties: {severity: "Heavy"},
+          geometry: {coordinates: f.geometry.coordinates, type: "Polygon"}
+        });
+      }
+  
+      setFeatures(currFeatures => {
+        const newFeatures = {...currFeatures};
+        for (const f of e.features) {
+          newFeatures[f.id] = f;
+        }
+        return newFeatures;
+      });
+    }
+    
+    const onDelete = (e) => {
+      setFeatures(currFeatures => {
+        const newFeatures = {...currFeatures};
+        for (const f of e.features) {
+          delete newFeatures[f.id];
+        }
+        return newFeatures;
+      });
+    };  
 
     const getTrashPolygons = async () => {
       const results = await axios('http://localhost:8080/api/trash');
@@ -99,34 +110,10 @@ export default function Mapper() {
       //https://gist.github.com/dnseminara/0790e53cef9867e848e716937727ab18
       //https://stackoverflow.com/questions/60085087/add-onclick-to-a-mapbox-marker-element
     };
+
     getTrashPolygons();
   });
 
-  // useEffect(() => {
-  //   const draw = new MapboxDraw({
-  //     displayControlsDefault: false,
-  //     controls: {
-  //       polygon: true,
-  //       trash: true
-  //     },
-  //     defaultMode: 'draw_polygon'
-  //   });
-  
-  //   map.current.addControl(draw);
-
-  //   map.current.on('draw.create', onUpdate);
-  //   map.current.on('draw.delete', onDelete);
-  //   map.current.on('draw.update', onUpdate);
-
-  //   console.log(features);
-
-  //   for (const id in features) {
-  //     console.log('test');
-  //     draw.add(
-  //       { type: 'Point', coordinates: [0, 0] }      );    
-  //   }
-  // });
-  
   return (
     <div
       ref={mapContainer}
@@ -134,7 +121,3 @@ export default function Mapper() {
       style={{height: "650px"}} />
   );
 }
-
-// export function renderToDom(container) {
-//   createRoot(container).render(<App />);
-// }

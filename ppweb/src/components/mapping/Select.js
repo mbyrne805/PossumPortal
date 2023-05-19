@@ -5,7 +5,7 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 
-export default function Select() {
+export default function CategorySelect() {
   const [category, setCategory] = React.useState('');
 
   const handleChange = (event) => {
