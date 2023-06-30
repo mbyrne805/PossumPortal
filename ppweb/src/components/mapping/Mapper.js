@@ -8,8 +8,7 @@ import MapboxDraw from '@mapbox/mapbox-gl-draw';
 import DrawControl from './DrawControl';
 import ControlPanel from './ControlPanel';
 
-const TOKEN = 'pk.eyJ1IjoibWJ5cm5lNTEwIiwiYSI6ImNsNDQ3MDYxODA5a2wza3A3NTdydmp1bG0ifQ.FEbWBlXPfSgUt-Aibs5bUg';
-mapboxgl.accessToken = TOKEN;
+mapboxgl.accessToken = process.env.MAPBOX_ACCESS_TOKEN;
 
 export default function Mapper() {
   const mapContainer = useRef(null);
