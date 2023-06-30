@@ -9,8 +9,7 @@ import DrawControl from './DrawControl';
 import ControlPanel from './ControlPanel';
 // import {styles} from './styles/MapboxStyle';
 
-const TOKEN = 'pk.eyJ1IjoibWJ5cm5lNTEwIiwiYSI6ImNsNDQ3MDYxODA5a2wza3A3NTdydmp1bG0ifQ.FEbWBlXPfSgUt-Aibs5bUg';
-mapboxgl.accessToken = TOKEN;
+mapboxgl.accessToken = process.env.MAPBOX_ACCESS_TOKEN;
 
 export default function Mapper() {
   const mapContainer = useRef(null);
