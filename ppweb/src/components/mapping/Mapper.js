@@ -7,19 +7,27 @@ import mapboxgl from '!mapbox-gl'; // eslint-disable-line import/no-webpack-load
 import MapboxDraw from '@mapbox/mapbox-gl-draw';
 import DrawControl from './DrawControl';
 import ControlPanel from './ControlPanel';
-// import {styles} from './styles/MapboxStyle';
+import MapboxStyle from './style/DrawStyle';
+import {centroid, polygon} from '@turf/turf';
+
+//https://docs.mapbox.com/mapbox-gl-js/example/geojson-polygon/
+//need to correctly add fill layer for mapbox-gl-draw-hot/cold polygons to enable mouseenter/leave events
 
 const TOKEN = 'pk.eyJ1IjoibWJ5cm5lNTEwIiwiYSI6ImNsNDQ3MDYxODA5a2wza3A3NTdydmp1bG0ifQ.FEbWBlXPfSgUt-Aibs5bUg';
 mapboxgl.accessToken = TOKEN;
 
-export default function Mapper() {
+export default function Mapper(props) {
   const mapContainer = useRef(null);
   const map = useRef(null);
-  const [lng, setLng] = useState(-119.730464);
-  const [lat, setLat] = useState(34.44206);
+  const [lng, setLng] = useState(-110.730464);
+  const [lat, setLat] = useState(32.44206);
   const [zoom, setZoom] = useState(14);
-  const [features, setFeatures] = useState(null);
-  const [category, setCategory] = useState('trash');
+  const [polygonFeatures, setPolygonFeatures] = useState(null);
+  const category = useRef(null);
+
+  useEffect(() => {
+    category.current = props.category;
+  });
 
   useEffect(() => {
     if (map.current) return;
@@ -32,40 +40,82 @@ export default function Mapper() {
     });
 
     const draw = new MapboxDraw({
+      userProperties: true,
       displayControlsDefault: false,
       controls: {
         polygon: true,
         trash: true
       },
-      defaultMode: 'draw_polygon'
+      defaultMode: 'draw_polygon',
+      styles: MapboxStyle.styles
     });
   
     map.current.addControl(draw);
 
-    map.current.on('draw.create', onUpdate);
-    map.current.on('draw.delete', onDelete);
-    map.current.on('draw.update', onUpdate);
-
-    function changeColor(category, featureId) {
-      switch(category) {
+    function changeColor(featureId) {
+      switch(category.current) {
         case "trash":
-          draw.setFeatureProperty(featureId, 'portColor', '#880808')
+          draw.setFeatureProperty(featureId, 'portColor', '#880808');
+          break;
+        case "ecology":
+          draw.setFeatureProperty(featureId, 'portColor', '#00FF00');
+          break;
+        case "restoration":
+          draw.setFeatureProperty(featureId, 'portColor', '#00FF00');
+          break;  
+        case "fire":
+          draw.setFeatureProperty(featureId, 'portColor', '#00FF00');
+          break;
+        case "custom":
+          draw.setFeatureProperty(featureId, 'portColor', '#A020F0');
           break;
       }
     }
 
-    const onUpdate = (e) => {
+    const onCreate = (e) => {
+      // console.log(map.current.style._sourceCaches['other:mapbox-gl-draw-hot']);
+      // console.log(map.current.style._sourceCaches['other:mapbox-gl-draw-cold']);
+
       for (const f of e.features) {
-        changeColor(category, f.id);
+        changeColor(f.id);
         axios.post('http://localhost:8080/api/trash', {
           id: f.id,
           type: "Feature",
-          properties: {severity: "Heavy"},
+          properties: {
+            category: "trash",
+            notes: "",
+            user: "Matt",
+            date: "6/27/2023"
+          },
           geometry: {coordinates: f.geometry.coordinates, type: "Polygon"}
         });
       }
   
-      setFeatures(currFeatures => {
+      setPolygonFeatures(currFeatures => {
+        const newFeatures = {...currFeatures};
+        for (const f of e.features) {
+          newFeatures[f.id] = f;
+        }
+        return newFeatures;
+      });
+    }
+
+    const onUpdate = (e) => {
+      for (const f of e.features) {
+        axios.post('http://localhost:8080/api/trash', {
+          id: f.id,
+          type: "Feature",
+          properties: {
+            category: "trash",
+            notes: "",
+            user: "Matt",
+            date: "6/27/2023"
+          },
+          geometry: {coordinates: f.geometry.coordinates, type: "Polygon"}
+        });
+      }
+  
+      setPolygonFeatures(currFeatures => {
         const newFeatures = {...currFeatures};
         for (const f of e.features) {
           newFeatures[f.id] = f;
@@ -75,43 +125,105 @@ export default function Mapper() {
     }
     
     const onDelete = (e) => {
-      setFeatures(currFeatures => {
+      for (const f of e.features) {
+        axios.delete(`http://localhost:8080/api/trash/${f.id}`);
+      }
+
+      setPolygonFeatures(currFeatures => {
         const newFeatures = {...currFeatures};
         for (const f of e.features) {
           delete newFeatures[f.id];
         }
         return newFeatures;
       });
-    };  
+    };
+
+    map.current.on('draw.create', onCreate);
+    map.current.on('draw.delete', onDelete);
+    map.current.on('draw.update', onUpdate);
 
     const getTrashPolygons = async () => {
       const results = await axios('http://localhost:8080/api/trash');
       let pgId;
       for (let id in results.data) {
-        pgId = draw.add(results.data[id]);
+        if (results.data[id].geometry.coordinates) {
+          pgId = draw.add(results.data[id]);
+        } else {
+          axios.delete(`http://localhost:8080/api/trash/${id}`);
+        }
       }
-
-      console.log(pgId);
-
-      map.current.on('load', function() {
-        map.current.addLayer({
-          'id': 'test',
-          'type': 'symbol',
-          'source': 'mapbox-gl-draw-hot',
-        });
-
-        map.current.on('click', 'test', function() {
-          console.log('create');
-        });
-      });
-      
-      setFeatures(results.data);
+      //TODO: repeat for all category endpoints
+      setPolygonFeatures(results.data);
 
       //https://gist.github.com/dnseminara/0790e53cef9867e848e716937727ab18
       //https://stackoverflow.com/questions/60085087/add-onclick-to-a-mapbox-marker-element
     };
 
     getTrashPolygons();
+
+    const popup = new mapboxgl.Popup({
+      closeButton: false,
+      closeOnClick: false
+    });
+       
+    map.current.on('idle', function() {
+      if (!map.current.getLayer('polygons-hot')) {
+        map.current.addLayer({
+          'id': 'polygons-hot',
+          'type': 'fill',
+          'source': 'mapbox-gl-draw-hot',
+          'layout': {},
+          'paint': {
+            'fill-opacity': 0
+          }
+        });
+        map.current.addLayer({
+          'id': 'polygons-cold',
+          'type': 'fill',
+          'source': 'mapbox-gl-draw-cold',
+          'layout': {},
+          'paint': {
+            'fill-opacity': 0
+          }
+        });  
+      }  
+    });
+
+    map.current.on('mouseenter', 'polygons-hot', (e) => {
+      // Change the cursor style as a UI indicator.
+      // map.current.getCanvas().style.cursor = 'pointer';
+       
+      const coordinates = e.features[0].geometry.coordinates.slice();
+      // const severity = e.features[0].properties.severity;
+
+      const turfPoly = polygon(coordinates);
+      const turfCentroid = centroid(turfPoly);
+
+      //https://gis.stackexchange.com/questions/279127/how-to-add-css-styling-in-mapbox-gl-popup
+      popup.setLngLat(turfCentroid.geometry.coordinates).setHTML("foo").addTo(map.current);
+    });
+
+    map.current.on('mouseleave', 'polygons-hot', () => {
+      // map.current.getCanvas().style.cursor = 'pointer';
+      popup.remove();
+    });
+
+    map.current.on('mouseenter', 'polygons-cold', (e) => {
+      // map.current.getCanvas().style.cursor = 'pointer';
+       
+      const coordinates = e.features[0].geometry.coordinates.slice();
+      // const severity = e.features[0].properties.severity;
+
+      const turfPoly = polygon(coordinates);
+      const turfCentroid = centroid(turfPoly);
+      //https://gis.stackexchange.com/questions/279127/how-to-add-css-styling-in-mapbox-gl-popup
+      popup.setLngLat(turfCentroid.geometry.coordinates).setHTML("foo").addTo(map.current);
+    });
+
+    map.current.on('mouseleave', 'polygons-cold', (e) => {
+      // map.current.getCanvas().style.cursor = 'pointer';
+      popup.remove();
+    });
   });
 
   return (

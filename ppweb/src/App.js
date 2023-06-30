@@ -1,4 +1,3 @@
-import React from 'react';
 import './App.css';
 import { Helmet } from 'react-helmet';
 import TopBar from './components/layout/TopBar';
@@ -6,6 +5,14 @@ import Mapper from './components/mapping/Mapper';
 import CategorySelect from './components/mapping/Select';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { useState } from 'react';
+
+const theme = createTheme({
+  typography: {
+    
+  }
+});
 
 function Item(props) {
   const { sx, padding, ...other } = props;
@@ -30,16 +37,20 @@ function Item(props) {
 //use speed dial here
 
 function App() {
+  const [category, setCategory] = useState(null);
+
+  const handleCategoryChange = (e) => {
+    setCategory(e.target.value);
+  };
+
   return (
     <Box bgcolor="#4A5553" padding={1}>
       <Item marginBottom={1}>
         <TopBar/>
       </Item>
-      <Item>
-        <Mapper/>
-      </Item>
-      <Item>
-        <CategorySelect position="absolute"/>
+      <Item flex={1} position="relative">
+        <Mapper category={category}/>
+          <CategorySelect position="absolute" handleChange={handleCategoryChange}/>
       </Item>
     </Box>
   );

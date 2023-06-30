@@ -5,31 +5,17 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 
-export default function CategorySelect() {
-  const [category, setCategory] = React.useState('');
-
-  const handleChange = (event) => {
-    setCategory(event.target.value);
-  };
+export default function CategorySelect(props) {
+  //https://stackoverflow.com/questions/73198612/mui-select-border-not-extending-to-label-white-space
 
   return (
-    <Box sx={{ minWidth: 120 }}>
-      <FormControl fullWidth>
-        <InputLabel id="demo-simple-select-label">Age</InputLabel>
-        <Select
-          labelId="category-select-label"
-          id="category-select"
-          value={category}
-          label="Category"
-          onChange={handleChange}
-        >
-          <MenuItem value={'Trash'}>Trash</MenuItem>
-          <MenuItem value={'Eco'}>Eco</MenuItem>
-          <MenuItem value={'Fire'}>Fire</MenuItem>
-          <MenuItem value={'Forage'}>Forage</MenuItem>
-          <MenuItem value={'Custom'}>Custom</MenuItem>
-        </Select>
-      </FormControl>
-    </Box>
+    <select onChange={props.handleChange} name="cars" id="cars" style={{position: "absolute", top: 8, left: 8, padding: 5, borderRadius: 4}}>
+      <option value="trash">Trash</option>
+      <option value="ecology">Ecology</option>
+      <option value="restoration">Restoration</option>
+      <option value="fire">Fire</option>
+      <option value="forage">Forage</option>
+      <option value="custom">Custom</option>
+    </select>
   );
 }
