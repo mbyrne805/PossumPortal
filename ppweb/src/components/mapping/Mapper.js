@@ -13,7 +13,7 @@ import {centroid, polygon} from '@turf/turf';
 //https://docs.mapbox.com/mapbox-gl-js/example/geojson-polygon/
 //need to correctly add fill layer for mapbox-gl-draw-hot/cold polygons to enable mouseenter/leave events
 
-mapboxgl.accessToken = process.env.MAPBOX_ACCESS_TOKEN;
+mapboxgl.accessToken = "pk.eyJ1IjoibWJ5cm5lNTEwIiwiYSI6ImNsamtkMmU2MzBneXozb280aWMzYWw3Z2wifQ.RYlqyg-r4iiRc-QhsbXKxg";
 
 export default function Mapper(props) {
   const mapContainer = useRef(null);
@@ -72,9 +72,7 @@ export default function Mapper(props) {
     }
 
     const onCreate = (e) => {
-      // console.log(map.current.style._sourceCaches['other:mapbox-gl-draw-hot']);
-      // console.log(map.current.style._sourceCaches['other:mapbox-gl-draw-cold']);
-
+      //remove for loop
       for (const f of e.features) {
         changeColor(f.id);
         axios.post('http://localhost:8080/api/trash', {
@@ -89,6 +87,7 @@ export default function Mapper(props) {
           geometry: {coordinates: f.geometry.coordinates, type: "Polygon"}
         });
       }
+      props.handleOpen(e.features[0]);
   
       setPolygonFeatures(currFeatures => {
         const newFeatures = {...currFeatures};
@@ -99,6 +98,7 @@ export default function Mapper(props) {
       });
     }
 
+    //need to persist notes below, currently """"
     const onUpdate = (e) => {
       for (const f of e.features) {
         axios.post('http://localhost:8080/api/trash', {
@@ -151,7 +151,7 @@ export default function Mapper(props) {
           axios.delete(`http://localhost:8080/api/trash/${id}`);
         }
       }
-      //TODO: repeat for all category endpoints
+      //TODO (SERVER): repeat for all category endpoints
       setPolygonFeatures(results.data);
 
       //https://gist.github.com/dnseminara/0790e53cef9867e848e716937727ab18

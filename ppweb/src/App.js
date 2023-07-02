@@ -3,6 +3,7 @@ import { Helmet } from 'react-helmet';
 import TopBar from './components/layout/TopBar';
 import Mapper from './components/mapping/Mapper';
 import CategorySelect from './components/mapping/Select';
+import PolygonCreationDialog from './components/mapping/PolygonCreationDialog';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
@@ -38,21 +39,35 @@ function Item(props) {
 
 function App() {
   const [category, setCategory] = useState(null);
-  const [open, setOpen] = React.useState(false);
-  const [selectedValue, setSelectedValue] = React.useState(emails[1]);
+  const [open, setOpen] = useState(false);
+  const [newPoly, setNewPoly] = useState(null);
 
   const handleCategoryChange = (e) => {
     setCategory(e.target.value);
   };
 
+  const handleOpen = (newPoly) => {
+    setNewPoly(newPoly);
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+//https://stackoverflow.com/questions/1776915/how-can-i-center-an-absolutely-positioned-element-in-a-div
   return (
     <Box bgcolor="#4A5553" padding={1}>
       <Item marginBottom={1}>
         <TopBar/>
       </Item>
       <Item flex={1} position="relative">
-        <Mapper category={category}/>
-          <CategorySelect position="absolute" handleChange={handleCategoryChange}/>
+        <Mapper category={category} handleOpen={handleOpen}/>
+        <CategorySelect handleChange={handleCategoryChange}/>
+        <PolygonCreationDialog
+          open={open}
+          handleClose={handleClose}
+          newPoly={newPoly} />
       </Item>
     </Box>
   );
