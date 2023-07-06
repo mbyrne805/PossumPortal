@@ -1,24 +1,22 @@
 import * as React from 'react';
-import {useState, useEffect, useRef} from 'react';
-import {createRoot} from 'react-dom/client';
-import Map, {Source, Layer} from 'react-map-gl';
+import {useState, useEffect, useRef, useContext} from 'react';
 import axios from 'axios';
 import mapboxgl from '!mapbox-gl'; // eslint-disable-line import/no-webpack-loader-syntax
 import MapboxDraw from '@mapbox/mapbox-gl-draw';
-import DrawControl from './DrawControl';
-import ControlPanel from './ControlPanel';
 import MapboxStyle from './style/DrawStyle';
+import PolygonPopup from './PolygonPopup';
 import {centroid, polygon} from '@turf/turf';
 
 //https://docs.mapbox.com/mapbox-gl-js/example/geojson-polygon/
 //need to correctly add fill layer for mapbox-gl-draw-hot/cold polygons to enable mouseenter/leave events
 
-const TOKEN = 'pk.eyJ1IjoibWJ5cm5lNTEwIiwiYSI6ImNsNDQ3MDYxODA5a2wza3A3NTdydmp1bG0ifQ.FEbWBlXPfSgUt-Aibs5bUg';
+const TOKEN = 'pk.eyJ1IjoibWJ5cm5lNTEwIiwiYSI6ImNsamtkMmU2MzBneXozb280aWMzYWw3Z2wifQ.RYlqyg-r4iiRc-QhsbXKxg';
 mapboxgl.accessToken = TOKEN;
 
 export default function Mapper(props) {
   const mapContainer = useRef(null);
   const map = useRef(null);
+  // const popup = useRef(null);
   const [lng, setLng] = useState(-110.730464);
   const [lat, setLat] = useState(32.44206);
   const [zoom, setZoom] = useState(14);
@@ -51,6 +49,11 @@ export default function Mapper(props) {
     });
   
     map.current.addControl(draw);
+
+    if (props.newPoly) {
+      console.log('test');
+      draw.add(props.newPoly);
+    }
 
     function changeColor(featureId) {
       switch(category.current) {
@@ -88,7 +91,10 @@ export default function Mapper(props) {
           geometry: {coordinates: f.geometry.coordinates, type: "Polygon"}
         });
       }
-      props.handleOpen(e.features[0]);
+      let newPoly = e.features[0];
+      newPoly.properties.user = "Matt"
+      draw.add(newPoly);
+      props.handleOpen(newPoly);
   
       setPolygonFeatures(currFeatures => {
         const newFeatures = {...currFeatures};
@@ -161,10 +167,10 @@ export default function Mapper(props) {
 
     getTrashPolygons();
 
-    const popup = new mapboxgl.Popup({
-      closeButton: false,
-      closeOnClick: false
-    });
+    // const popup = new mapboxgl.Popup({
+    //   closeButton: false,
+    //   closeOnClick: false
+    // });
        
     map.current.on('idle', function() {
       if (!map.current.getLayer('polygons-hot')) {
@@ -185,51 +191,77 @@ export default function Mapper(props) {
           'paint': {
             'fill-opacity': 0
           }
-        });  
+        });
       }  
     });
 
-    map.current.on('mouseenter', 'polygons-hot', (e) => {
-      // Change the cursor style as a UI indicator.
-      // map.current.getCanvas().style.cursor = 'pointer';
+    // map.current.on('mouseenter', 'polygons-hot', (e) => {
+    //   console.log(e);
+    //   // Change the cursor style as a UI indicator.
+    //   // map.current.getCanvas().style.cursor = 'pointer';
        
-      const coordinates = e.features[0].geometry.coordinates.slice();
-      // const severity = e.features[0].properties.severity;
+    //   const coordinates = e.features[0].geometry.coordinates.slice();
+    //   // const severity = e.features[0].properties.severity;
 
-      const turfPoly = polygon(coordinates);
-      const turfCentroid = centroid(turfPoly);
+    //   const turfPoly = polygon(coordinates);
+    //   const turfCentroid = centroid(turfPoly);
 
-      //https://gis.stackexchange.com/questions/279127/how-to-add-css-styling-in-mapbox-gl-popup
-      popup.setLngLat(turfCentroid.geometry.coordinates).setHTML("foo").addTo(map.current);
-    });
+    //   const user = e.features[0].properties.user_user;
+    //   const date = e.features[0].properties.user_date;
+    //   const notes = e.features[0].properties.user_notes;
 
-    map.current.on('mouseleave', 'polygons-hot', () => {
-      // map.current.getCanvas().style.cursor = 'pointer';
-      popup.remove();
-    });
+    //   const popupHtml = `
+    //     <h3>Trash AoI</h3>
+    //     <h4>${props.test}</h4> 
+    //     <h4>by ${props.test} on ${props.test}</h4>  
+    //   `;
 
-    map.current.on('mouseenter', 'polygons-cold', (e) => {
-      // map.current.getCanvas().style.cursor = 'pointer';
+    //   //https://gis.stackexchange.com/questions/279127/how-to-add-css-styling-in-mapbox-gl-popup
+    //   popup.setLngLat(turfCentroid.geometry.coordinates).setHTML(popupHtml).addTo(map.current);
+    // });
+
+    // map.current.on('mouseleave', 'polygons-hot', () => {
+    //   // map.current.getCanvas().style.cursor = 'pointer';
+    //   popup.remove();
+    // });
+
+    // map.current.on('mouseenter', 'polygons-cold', (e) => {
+    //   console.log(e);
+    //   // map.current.getCanvas().style.cursor = 'pointer';
        
-      const coordinates = e.features[0].geometry.coordinates.slice();
-      // const severity = e.features[0].properties.severity;
+    //   const coordinates = e.features[0].geometry.coordinates.slice();
+    //   // const severity = e.features[0].properties.severity;
 
-      const turfPoly = polygon(coordinates);
-      const turfCentroid = centroid(turfPoly);
-      //https://gis.stackexchange.com/questions/279127/how-to-add-css-styling-in-mapbox-gl-popup
-      popup.setLngLat(turfCentroid.geometry.coordinates).setHTML("foo").addTo(map.current);
-    });
+    //   const turfPoly = polygon(coordinates);
+    //   const turfCentroid = centroid(turfPoly);
+    //   //https://gis.stackexchange.com/questions/279127/how-to-add-css-styling-in-mapbox-gl-popup
+      
+    //   const user = e.features[0].properties.user_user;
+    //   const date = e.features[0].properties.user_date;
+    //   const notes = e.features[0].properties.user_notes;
+      
+    //   const popupHtml = `
+    //     <h3>Trash AoI</h3>
+    //     <h4>${props.test}</h4> 
+    //     <h4>by ${props.test} on ${props.test}</h4>  
+    //   `;
 
-    map.current.on('mouseleave', 'polygons-cold', (e) => {
-      // map.current.getCanvas().style.cursor = 'pointer';
-      popup.remove();
-    });
+    //   popup.setLngLat(turfCentroid.geometry.coordinates).setHTML(popupHtml).addTo(map.current);
+    // });
+
+    // map.current.on('mouseleave', 'polygons-cold', (e) => {
+    //   // map.current.getCanvas().style.cursor = 'pointer';
+    //   popup.remove();
+    // });
   });
 
   return (
-    <div
-      ref={mapContainer}
-      className="map-container"
-      style={{height: "650px"}} />
+    <>
+      <div
+        ref={mapContainer}
+        className="map-container"
+        style={{height: "850px"}} />
+      <PolygonPopup map={map.current}/>
+    </>
   );
 }

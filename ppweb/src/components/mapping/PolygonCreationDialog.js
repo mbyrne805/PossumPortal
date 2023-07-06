@@ -1,3 +1,5 @@
+import { useState, useContext } from 'react';
+import { PolygonContext } from './context/PolygonContext';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
@@ -5,7 +7,6 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import { useState } from 'react';
 import axios from 'axios';
 
 export default function PolygonCreationDialog(props) {
@@ -13,11 +14,15 @@ export default function PolygonCreationDialog(props) {
 
   const [notes, setNotes] = useState(null);
 
+  const polygonContext = useContext(PolygonContext);
+  console.log(polygonContext);
+
   const onNotesChange = (e) => {
     setNotes(e.target.value);
   }
 
   const onClose = () => {
+    console.log(newPoly);
     handleClose();
     axios.post(`http://localhost:8080/api/trash`, {
       id: newPoly.id,

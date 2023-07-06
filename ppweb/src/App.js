@@ -1,11 +1,10 @@
 import './App.css';
-import { Helmet } from 'react-helmet';
 import TopBar from './components/layout/TopBar';
 import Mapper from './components/mapping/Mapper';
 import CategorySelect from './components/mapping/Select';
 import PolygonCreationDialog from './components/mapping/PolygonCreationDialog';
+import { PolygonContext } from './components/mapping/context/PolygonContext';
 import Box from '@mui/material/Box';
-import Container from '@mui/material/Container';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { useState } from 'react';
 
@@ -41,19 +40,24 @@ function App() {
   const [category, setCategory] = useState(null);
   const [open, setOpen] = useState(false);
   const [newPoly, setNewPoly] = useState(null);
+  const [test, setTest] = useState(null);
 
   const handleCategoryChange = (e) => {
     setCategory(e.target.value);
   };
 
   const handleOpen = (newPoly) => {
+    console.log(newPoly);
     setNewPoly(newPoly);
     setOpen(true);
+    setTest('test');
   };
 
   const handleClose = () => {
     setOpen(false);
   };
+
+  console.log(newPoly);
 
 //https://stackoverflow.com/questions/1776915/how-can-i-center-an-absolutely-positioned-element-in-a-div
   return (
@@ -61,13 +65,19 @@ function App() {
       <Item marginBottom={1}>
         <TopBar/>
       </Item>
-      <Item flex={1} position="relative">
-        <Mapper category={category} handleOpen={handleOpen}/>
-        <CategorySelect handleChange={handleCategoryChange}/>
-        <PolygonCreationDialog
-          open={open}
-          handleClose={handleClose}
-          newPoly={newPoly} />
+      <Item position="relative">
+        <PolygonContext.Provider value={{}}>
+          <Mapper
+            category={category}
+            handleOpen={handleOpen}
+            newPoly={newPoly} 
+            test={test} />
+          <CategorySelect handleChange={handleCategoryChange}/>
+          <PolygonCreationDialog
+            open={open}
+            handleClose={handleClose}
+            newPoly={newPoly} />
+        </PolygonContext.Provider>
       </Item>
     </Box>
   );
