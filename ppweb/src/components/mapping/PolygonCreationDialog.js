@@ -15,26 +15,26 @@ export default function PolygonCreationDialog(props) {
   const [notes, setNotes] = useState(null);
 
   const polygonContext = useContext(PolygonContext);
-  console.log(polygonContext);
 
   const onNotesChange = (e) => {
     setNotes(e.target.value);
   }
 
   const onClose = () => {
-    console.log(newPoly);
-    handleClose();
     axios.post(`http://localhost:8080/api/trash`, {
-      id: newPoly.id,
+      id: newPoly.current.id,
       type: "Feature",
       properties: {
         category: "trash",
         notes: notes,
-        user: newPoly.properties.user,
-        date: newPoly.properties.date
+        user: newPoly.current.properties.user,
+        date: newPoly.current.properties.date
       },
-      geometry: {coordinates: newPoly.geometry.coordinates, type: "Polygon"}
+      geometry: {coordinates: newPoly.current.geometry.coordinates, type: "Polygon"}
     });
+    newPoly.current.properties.notes = notes;
+    setNotes("");
+    handleClose(newPoly.current);
   }
 
   return (

@@ -6,7 +6,7 @@ import PolygonCreationDialog from './components/mapping/PolygonCreationDialog';
 import { PolygonContext } from './components/mapping/context/PolygonContext';
 import Box from '@mui/material/Box';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 
 const theme = createTheme({
   typography: {
@@ -39,26 +39,25 @@ function Item(props) {
 function App() {
   const [category, setCategory] = useState(null);
   const [open, setOpen] = useState(false);
-  const [newPoly, setNewPoly] = useState(null);
-  const [test, setTest] = useState(null);
+  const newPoly = useRef(null);
+  const [notesCreated, setNotesCreated] = useState(false);
 
   const handleCategoryChange = (e) => {
     setCategory(e.target.value);
   };
 
-  const handleOpen = (newPoly) => {
-    console.log(newPoly);
-    setNewPoly(newPoly);
+  const handleOpen = (newPol) => {
+    console.log(newPol);
+    newPoly.current = newPol;
     setOpen(true);
-    setTest('test');
   };
 
-  const handleClose = () => {
+  const handleClose = (newPoly) => {
+    newPoly.current = newPoly;
     setOpen(false);
+    setNotesCreated(true);
   };
-
   console.log(newPoly);
-
 //https://stackoverflow.com/questions/1776915/how-can-i-center-an-absolutely-positioned-element-in-a-div
   return (
     <Box bgcolor="#4A5553" padding={1}>
@@ -66,13 +65,13 @@ function App() {
         <TopBar/>
       </Item>
       <Item position="relative">
-        <PolygonContext.Provider value={{}}>
+        <PolygonContext.Provider value={newPoly}>
           <Mapper
             category={category}
             handleOpen={handleOpen}
-            newPoly={newPoly} 
-            test={test} />
-          <CategorySelect handleChange={handleCategoryChange}/>
+            newPoly={newPoly}
+            notesCreated={notesCreated}/>
+          <CategorySelect handleChange={handleCategoryChange} />
           <PolygonCreationDialog
             open={open}
             handleClose={handleClose}

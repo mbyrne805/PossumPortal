@@ -10,18 +10,20 @@ import {centroid, polygon} from '@turf/turf';
 //https://docs.mapbox.com/mapbox-gl-js/example/geojson-polygon/
 //need to correctly add fill layer for mapbox-gl-draw-hot/cold polygons to enable mouseenter/leave events
 
-const TOKEN = 'pk.eyJ1IjoibWJ5cm5lNTEwIiwiYSI6ImNsamtkMmU2MzBneXozb280aWMzYWw3Z2wifQ.RYlqyg-r4iiRc-QhsbXKxg';
+const TOKEN = 'pk.eyJ1IjoibWJ5cm5lNTEwIiwiYSI6ImNsanFwNWJmaTA3OWEzbGxzeHo1ZDNkcm4ifQ.T_6zPRVVwagEkUAGTDcOTA';
 mapboxgl.accessToken = TOKEN;
 
 export default function Mapper(props) {
   const mapContainer = useRef(null);
   const map = useRef(null);
+  const draw = useRef(null);
   // const popup = useRef(null);
   const [lng, setLng] = useState(-110.730464);
   const [lat, setLat] = useState(32.44206);
   const [zoom, setZoom] = useState(14);
   const [polygonFeatures, setPolygonFeatures] = useState(null);
   const category = useRef(null);
+  const [cont, setCont] = useState(true);
 
   useEffect(() => {
     category.current = props.category;
@@ -37,7 +39,7 @@ export default function Mapper(props) {
       zoom: zoom
     });
 
-    const draw = new MapboxDraw({
+    draw.current = new MapboxDraw({
       userProperties: true,
       displayControlsDefault: false,
       controls: {
@@ -48,29 +50,28 @@ export default function Mapper(props) {
       styles: MapboxStyle.styles
     });
   
-    map.current.addControl(draw);
+    map.current.addControl(draw.current);
 
-    if (props.newPoly) {
-      console.log('test');
-      draw.add(props.newPoly);
+    if (props.newPoly.current) {
+      draw.current.add(props.newPoly.current);
     }
 
     function changeColor(featureId) {
       switch(category.current) {
         case "trash":
-          draw.setFeatureProperty(featureId, 'portColor', '#880808');
+          draw.current.setFeatureProperty(featureId, 'portColor', '#880808');
           break;
         case "ecology":
-          draw.setFeatureProperty(featureId, 'portColor', '#00FF00');
+          draw.current.setFeatureProperty(featureId, 'portColor', '#00FF00');
           break;
         case "restoration":
-          draw.setFeatureProperty(featureId, 'portColor', '#00FF00');
+          draw.current.setFeatureProperty(featureId, 'portColor', '#00FF00');
           break;  
         case "fire":
-          draw.setFeatureProperty(featureId, 'portColor', '#00FF00');
+          draw.current.setFeatureProperty(featureId, 'portColor', '#00FF00');
           break;
         case "custom":
-          draw.setFeatureProperty(featureId, 'portColor', '#A020F0');
+          draw.current.setFeatureProperty(featureId, 'portColor', '#A020F0');
           break;
       }
     }
@@ -93,7 +94,7 @@ export default function Mapper(props) {
       }
       let newPoly = e.features[0];
       newPoly.properties.user = "Matt"
-      draw.add(newPoly);
+      // draw.current.add(newPoly);
       props.handleOpen(newPoly);
   
       setPolygonFeatures(currFeatures => {
@@ -152,11 +153,7 @@ export default function Mapper(props) {
       const results = await axios('http://localhost:8080/api/trash');
       let pgId;
       for (let id in results.data) {
-        if (results.data[id].geometry.coordinates) {
-          pgId = draw.add(results.data[id]);
-        } else {
-          axios.delete(`http://localhost:8080/api/trash/${id}`);
-        }
+        pgId = draw.current.add(results.data[id]);
       }
       //TODO (SERVER): repeat for all category endpoints
       setPolygonFeatures(results.data);
@@ -255,13 +252,33 @@ export default function Mapper(props) {
     // });
   });
 
+  useEffect(() => {
+    if (map.current && props.notesCreated && cont) {
+      const getTrashPolygons = async () => {
+        const results = await axios('http://localhost:8080/api/trash');
+        console.log(results);
+        let pgId;
+        for (let id in results.data) {
+          pgId = draw.current.add(results.data[id]);
+        }
+        //TODO (SERVER): repeat for all category endpoints
+        setCont(false);
+  
+        //https://gist.github.com/dnseminara/0790e53cef9867e848e716937727ab18
+        //https://stackoverflow.com/questions/60085087/add-onclick-to-a-mapbox-marker-element
+      };
+  
+      getTrashPolygons();  
+    }
+  });
+
   return (
     <>
       <div
         ref={mapContainer}
         className="map-container"
         style={{height: "850px"}} />
-      <PolygonPopup map={map.current}/>
+      <PolygonPopup map={map.current} newPoly={props.newPoly}/>
     </>
   );
 }
