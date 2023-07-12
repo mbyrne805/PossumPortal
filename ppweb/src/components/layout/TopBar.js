@@ -12,13 +12,15 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import SvgIcon from '@mui/material/SvgIcon';
-import {ReactComponent as PPLogo} from '../../assets/pplogowhite.svg';
-import { positions } from '@mui/system';
+import { ReactComponent as PPLogo } from '../../assets/pplogowhite.svg';
+import { Link } from 'react-router-dom';
 
-const pages = ['Home', 'Chat', 'Mapping'];
+const accountPages = ['Log in', 'Sign up'];
+const generalPages = ['Home', 'Community', 'Modeling'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 function TopBar() {
+  const [user, setUser] = React.useState(false);
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
@@ -39,47 +41,30 @@ function TopBar() {
 
   return (
     <AppBar position="static" sx={{bgcolor: "#099148"}}>
-      <Container maxWidth="xl">
-        <Toolbar disableGutters>
-          <Typography
-            variant="h3"
-            noWrap
-            component="a"
-            href="/"
-            sx={{
-              display: { xs: 'none', md: 'flex' },
-              fontFamily: 'fantasy',
-              fontWeight: 700,
-              letterSpacing: '.9rem',
-              color: 'inherit',
-              textDecoration: 'none',
-            }}
-          >
-            Possum
-          </Typography>
+      <Container maxWidth={false}>
+        <Toolbar disableGutters sx={{height: 10, minHeight: 10}}>
           <SvgIcon
             fontSize="large"
             component={PPLogo}
             inheritViewBox
-            sx={{ display: { xs: 'none', md: 'flex' }, mr: 2.25 }} />
+            sx={{ display: { xs: 'none', md: 'flex' }, mr: 4 }} />
           <Typography
-            variant="h3"
+            variant="h4"
             noWrap
             component="a"
             href="/"
             sx={{
-              mr: 2,
               display: { xs: 'none', md: 'flex' },
               fontFamily: 'fantasy',
-              fontWeight: 700,
-              letterSpacing: '.9rem',
+              fontWeight: 500,
+              letterSpacing: '.1rem',
               color: 'inherit',
               textDecoration: 'none',
+              mr: 4
             }}
           >
-            Portal
+            Possum Portal
           </Typography>
-
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
             <IconButton
               size="large"
@@ -109,10 +94,14 @@ function TopBar() {
                 display: { xs: 'block', md: 'none' },
               }}
             >
-              {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page}</Typography>
-                </MenuItem>
+              {generalPages.map((generalPage) => (
+                <Link to={`${generalPage}`}>
+                  <MenuItem
+                    key={generalPage}
+                    onClick={handleCloseNavMenu}>
+                      <Typography>{generalPage}</Typography>
+                  </MenuItem>
+                </Link>
               ))}
             </Menu>
           </Box>
@@ -140,45 +129,67 @@ function TopBar() {
             Possum Portal
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-            {pages.map((page) => (
-              <Button
-                key={page}
-                onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: 'white', display: 'block' }}
-              >
-                {page}
-              </Button>
+            {generalPages.map((generalPage) => (
+              <Link to={`${generalPage}`}>
+                <Button
+                  key={generalPage}
+                  onClick={handleCloseNavMenu}
+                  sx={{ my: 2, color: 'white', display: 'block' }} >
+                  <Typography>{generalPage}</Typography>
+                </Button>
+              </Link>
             ))}
           </Box>
 
-          <Box sx={{ flexGrow: 0, position: 'right' }}>
-            <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
-              </IconButton>
-            </Tooltip>
-            <Menu
-              sx={{ mt: '45px' }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
-            >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
-                </MenuItem>
-              ))}
-            </Menu>
+          <Box sx={{ flexGrow: 0, position: 'right', display: {xs: 'none', md: 'flex'} }}>
+            {
+              user ?
+              <>
+                <Tooltip title="Open settings">
+                  <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                    <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                  </IconButton>
+                </Tooltip>
+                <Menu
+                  sx={{ mt: '45px' }}
+                  id="menu-appbar"
+                  anchorEl={anchorElUser}
+                  anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  keepMounted
+                  transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  open={Boolean(anchorElUser)}
+                  onClose={handleCloseUserMenu}
+                >
+                  {settings.map((setting) => (
+                    <Link to={`${setting}`}>
+                      <MenuItem
+                        key={setting}
+                        onClick={handleCloseUserMenu}>
+                          <Typography textAlign="center">{setting}</Typography>
+                      </MenuItem>
+                    </Link>
+                  ))}
+                </Menu>
+              </> :
+              <>
+                {accountPages.map((accountPage) => (
+                  <Link to={`${accountPage}`}>
+                    <Button
+                      key={accountPage}
+                      onClick={handleCloseNavMenu}
+                      sx={{ my: 2, color: 'white', display: 'flex' }} >
+                      <Typography>{accountPage}</Typography>
+                    </Button>
+                  </Link>
+                ))}
+              </>
+            }
           </Box>
         </Toolbar>
       </Container>

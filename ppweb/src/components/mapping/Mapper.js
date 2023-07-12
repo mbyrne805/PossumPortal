@@ -5,12 +5,11 @@ import mapboxgl from '!mapbox-gl'; // eslint-disable-line import/no-webpack-load
 import MapboxDraw from '@mapbox/mapbox-gl-draw';
 import MapboxStyle from './style/DrawStyle';
 import PolygonPopup from './PolygonPopup';
-import {centroid, polygon} from '@turf/turf';
 
 //https://docs.mapbox.com/mapbox-gl-js/example/geojson-polygon/
 //need to correctly add fill layer for mapbox-gl-draw-hot/cold polygons to enable mouseenter/leave events
 
-const TOKEN = 'pk.eyJ1IjoibWJ5cm5lNTEwIiwiYSI6ImNsanFwNWJmaTA3OWEzbGxzeHo1ZDNkcm4ifQ.T_6zPRVVwagEkUAGTDcOTA';
+const TOKEN = 'pk.eyJ1IjoibWJ5cm5lNTEwIiwiYSI6ImNsanNwZWFtYTBvb2gzanJ5ZnlxNzd6YmUifQ.5qWHPh7lJfu39gxmdM3Fcw';
 mapboxgl.accessToken = TOKEN;
 
 export default function Mapper(props) {
