@@ -12,6 +12,7 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import SvgIcon from '@mui/material/SvgIcon';
+import { useScrollTrigger } from '@mui/material';
 import { ReactComponent as PPLogo } from '../../assets/pplogowhite.svg';
 import { Link } from 'react-router-dom';
 
@@ -19,7 +20,7 @@ const accountPages = ['Log in', 'Sign up'];
 const generalPages = ['Home', 'Community', 'Maps', 'Modeling'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
-function TopBar() {
+function TopBar(props) {
   const [user, setUser] = React.useState(false);
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
@@ -39,15 +40,19 @@ function TopBar() {
     setAnchorElUser(null);
   };
 
+  // const trigger = useScrollTrigger({});
+
+  console.log(props.trigger);
+
   return (
-    <AppBar sx={{bgcolor: "#099148"}}>
+    <AppBar sx={{bgcolor: props.trigger ? "#099148" : "transparent"}}>
       <Container maxWidth={false}>
         <Toolbar disableGutters sx={{}}>
           <SvgIcon
             fontSize="large"
             component={PPLogo}
             inheritViewBox
-            sx={{ display: { xs: 'none', md: 'flex' }, mr: 3 }} />
+            sx={{ display: { xs: "none", md: "flex" }, mr: 3 }} />
           <Typography
             variant="h4"
             noWrap
