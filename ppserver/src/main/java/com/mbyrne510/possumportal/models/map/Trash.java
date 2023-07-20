@@ -22,10 +22,8 @@ import java.util.List;
 public class Trash {
     @Id
     private String id;
-
     private ArrayList<ArrayList<ArrayList<Double>>> polygonCoords;
-
     private String date;
-
-    private String severity;
+    private String user;
+    private String notes;
 }

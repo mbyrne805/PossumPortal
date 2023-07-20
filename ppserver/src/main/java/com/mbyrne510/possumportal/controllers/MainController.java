@@ -37,13 +37,20 @@ public class MainController {
 
     @PostMapping("/trash")
     public ResponseEntity<TrashGeoJSON> saveTrash(@RequestBody TrashGeoJSON trashGeoJSON) {
-        System.out.println("test123");
-        System.out.println(trashGeoJSON);
         try {
             TrashGeoJSON trashResult = mapService.saveTrash(trashGeoJSON);
             return ResponseEntity.ok(trashResult);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @DeleteMapping("/trash/{id}")
+    public void deleteTrash(@PathVariable String id) {
+        try {
+            mapService.deleteTrash(id);
+        } catch (IllegalArgumentException e) {
+            return;
         }
     }
 }

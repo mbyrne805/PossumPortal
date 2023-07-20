@@ -16,7 +16,7 @@ import { ReactComponent as PPLogo } from '../../assets/pplogowhite.svg';
 import { Link } from 'react-router-dom';
 
 const accountPages = ['Log in', 'Sign up'];
-const generalPages = ['Home', 'Community', 'Modeling'];
+const generalPages = ['Home', 'Community', 'Maps', 'Modeling'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 function TopBar() {
@@ -40,14 +40,14 @@ function TopBar() {
   };
 
   return (
-    <AppBar position="static" sx={{bgcolor: "#099148"}}>
+    <AppBar sx={{bgcolor: "#099148"}}>
       <Container maxWidth={false}>
-        <Toolbar disableGutters sx={{height: 10, minHeight: 10}}>
+        <Toolbar disableGutters sx={{}}>
           <SvgIcon
             fontSize="large"
             component={PPLogo}
             inheritViewBox
-            sx={{ display: { xs: 'none', md: 'flex' }, mr: 4 }} />
+            sx={{ display: { xs: 'none', md: 'flex' }, mr: 3 }} />
           <Typography
             variant="h4"
             noWrap
@@ -60,7 +60,7 @@ function TopBar() {
               letterSpacing: '.1rem',
               color: 'inherit',
               textDecoration: 'none',
-              mr: 4
+              mr: 3
             }}
           >
             Possum Portal
@@ -94,15 +94,15 @@ function TopBar() {
                 display: { xs: 'block', md: 'none' },
               }}
             >
-              {generalPages.map((generalPage) => (
-                <Link to={`${generalPage}`}>
-                  <MenuItem
-                    key={generalPage}
-                    onClick={handleCloseNavMenu}>
-                      <Typography>{generalPage}</Typography>
-                  </MenuItem>
-                </Link>
-              ))}
+              {generalPages.map((generalPage) => {
+                const route = generalPage.toLowerCase();
+                <MenuItem
+                  key={generalPage}
+                  onClick={handleCloseNavMenu}
+                  component={Link} to={`/${generalPage}`}>
+                    <Typography>{generalPage}</Typography>
+                </MenuItem>
+              })}
             </Menu>
           </Box>
           <SvgIcon
@@ -129,16 +129,18 @@ function TopBar() {
             Possum Portal
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-            {generalPages.map((generalPage) => (
-              <Link to={`${generalPage}`}>
-                <Button
-                  key={generalPage}
-                  onClick={handleCloseNavMenu}
-                  sx={{ my: 2, color: 'white', display: 'block' }} >
-                  <Typography>{generalPage}</Typography>
-                </Button>
-              </Link>
-            ))}
+            {generalPages.map((generalPage) => {
+              const route = generalPage.toLowerCase();
+              return (<Button
+                component={Link}
+                to={`/${route}`}
+                key={generalPage}
+                onClick={handleCloseNavMenu}
+                sx={{ my: 2, color: 'white', display: 'block' }} >
+                <Typography>{generalPage}</Typography>
+              </Button>)
+            }
+            )}
           </Box>
 
           <Box sx={{ flexGrow: 0, position: 'right', display: {xs: 'none', md: 'flex'} }}>
@@ -167,9 +169,11 @@ function TopBar() {
                   onClose={handleCloseUserMenu}
                 >
                   {settings.map((setting) => (
-                    <Link to={`${setting}`}>
+                    <Link to={`${setting}`} textDecoration="none">
                       <MenuItem
                         key={setting}
+                        component={Link}
+                        to={`/${setting}`}
                         onClick={handleCloseUserMenu}>
                           <Typography textAlign="center">{setting}</Typography>
                       </MenuItem>
@@ -179,14 +183,14 @@ function TopBar() {
               </> :
               <>
                 {accountPages.map((accountPage) => (
-                  <Link to={`${accountPage}`}>
-                    <Button
-                      key={accountPage}
-                      onClick={handleCloseNavMenu}
-                      sx={{ my: 2, color: 'white', display: 'flex' }} >
-                      <Typography>{accountPage}</Typography>
-                    </Button>
-                  </Link>
+                  <Button
+                    key={accountPage}
+                    component={Link}
+                    to="/onboarding"
+                    onClick={handleCloseNavMenu}
+                    sx={{ my: 2, color: 'white', display: 'flex' }} >
+                    <Typography>{accountPage}</Typography>
+                  </Button>
                 ))}
               </>
             }

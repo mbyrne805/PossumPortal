@@ -21,9 +21,11 @@ public class TrashGeoJSON extends GeoJSON {
         String typeInp,
         String geometryTypeInp,
         ArrayList<ArrayList<ArrayList<Double>>> geometryCoordsInp,
-        String severityInp) {
+        String notesInp,
+        String userInp,
+        String dateInp) {
         super(idInp, typeInp, geometryTypeInp, geometryCoordsInp);
-        this.properties = new Properties(severityInp);
+        this.properties = new Properties(notesInp, userInp, dateInp);
     }
 
     @Getter
@@ -32,10 +34,14 @@ public class TrashGeoJSON extends GeoJSON {
     @NoArgsConstructor
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Properties {
-        private String severity;
+        private String notes;
+        private String user;
+        private String date;
 
-        private Properties(String severityInp) {
-            severity = severityInp;
+        private Properties(String notesInp, String userInp, String dateInp) {
+            notes = notesInp;
+            user = userInp;
+            date = dateInp;
         }
     }
 }

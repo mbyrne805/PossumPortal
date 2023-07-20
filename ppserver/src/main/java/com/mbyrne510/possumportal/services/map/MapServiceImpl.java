@@ -28,12 +28,14 @@ public class MapServiceImpl implements MapService {
     public TrashGeoJSON saveTrash(TrashGeoJSON trashGeoJSON) throws IllegalArgumentException {
         Trash trash = new Trash();
         trash.setId(trashGeoJSON.getId());
+        trash.setNotes(trashGeoJSON.getProperties().getNotes());
         LocalDateTime now = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         String formatted = now.format(formatter);
         trash.setDate(formatted);
-        trash.setSeverity(trashGeoJSON.getProperties().getSeverity());
+        trash.setUser(trashGeoJSON.getProperties().getUser());
         trash.setPolygonCoords(trashGeoJSON.getGeometry().getCoordinates());
+        System.out.println(trash.getUser());
         try {
             trashRepo.save(trash);
             return trashGeoJSON;
@@ -54,10 +56,20 @@ public class MapServiceImpl implements MapService {
                 "Feature",
                 "Polygon",
                 trashList.get(i).getPolygonCoords(),
-                trashList.get(i).getSeverity()
+                trashList.get(i).getNotes(),
+                trashList.get(i).getUser(),
+                trashList.get(i).getDate()
             ));
         }
-        System.out.println(trashResults);
         return Optional.of(trashResults);
+    }
+
+    @Override
+    public void deleteTrash(String id) {
+        try {
+            trashRepo.deleteById(id);
+        } catch (IllegalArgumentException e) {
+            throw e;
+        }
     }
 }

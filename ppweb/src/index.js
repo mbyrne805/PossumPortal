@@ -4,20 +4,25 @@ import './index.css';
 import App from './App';
 import Error from './components/routing/Error';
 import reportWebVitals from './reportWebVitals';
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { createBrowserRouter, RouterProvider, BrowserRouter } from "react-router-dom";
 
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <App />,
-    errorElement: <Error />
-  }
-])
+// const router = createBrowserRouter([
+//   {
+//     path: "/",
+//     element: <App />,
+//     errorElement: <Error />
+//   }
+// ])
+
+//https://stefaniq.com/migrating-your-react-app-to-next-js-a-comprehensive-guide/
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    {/* <RouterProvider router={router} /> */}
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
   </React.StrictMode>
 );
 

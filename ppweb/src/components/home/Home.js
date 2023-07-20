@@ -1,30 +1,21 @@
-import './Home.css';
-import TopBar from '../layout/TopBar';
-import Mapper from '../mapping/Mapper';
-import CategorySelect from '../mapping/Select';
-import PolygonCreationDialog from '../mapping/PolygonCreationDialog';
-import { PolygonContext } from '../mapping/context/PolygonContext';
-import Box from '@mui/material/Box';
-import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { useState, useRef } from 'react';
-
-const theme = createTheme({
-  typography: {
-    
-  }
-});
+import { Box, Container, Grid, Typography } from '@mui/material';
+import TopBar from '../layout/TopBar';
+import { Image } from 'mui-image';
+import naturgemalde from '../../assets/naturgamelde.webp';
 
 function Item(props) {
   const { sx, padding, ...other } = props;
   return (
     <Box
       sx={{
-        bgcolor: (theme) => (theme.palette.mode === 'dark' ? '#101010' : '#fff'),
-        color: (theme) => (theme.palette.mode === 'dark' ? 'grey.300' : 'grey.800'),
-        border: '5px solid',
-        borderColor: (theme) =>
-          theme.palette.mode === 'dark' ? 'grey.800' : 'grey.300',
-        borderRadius: 2,
+        // bgcolor: (theme) => (theme.palette.mode === 'dark' ? '#101010' : '#fff'),
+        // color: (theme) => (theme.palette.mode === 'dark' ? 'grey.300' : 'grey.800'),
+        bgcolor: "#383836",
+        // border: '5px solid',
+        // borderColor: (theme) =>
+        //   theme.palette.mode === 'dark' ? 'grey.800' : 'grey.300',
+        // borderRadius: 2,
         fontSize: '0.875rem',
         fontWeight: '700',
         ...sx,
@@ -34,52 +25,37 @@ function Item(props) {
   );
 }
 
-//use speed dial here
+//https://github.com/mui/material-ui/blob/v5.14.0/docs/data/material/getting-started/templates/dashboard/Dashboard.js
 
-function Home() {
-  const [category, setCategory] = useState(null);
-  const [open, setOpen] = useState(false);
-  const newPoly = useRef(null);
-  const [notesCreated, setNotesCreated] = useState(false);
-
-  const handleCategoryChange = (e) => {
-    setCategory(e.target.value);
-  };
-
-  const handleOpen = (newPol) => {
-    console.log(newPol);
-    newPoly.current = newPol;
-    setOpen(true);
-  };
-
-  const handleClose = (newPoly) => {
-    newPoly.current = newPoly;
-    setOpen(false);
-    setNotesCreated(true);
-  };
-  console.log(newPoly);
-//https://stackoverflow.com/questions/1776915/how-can-i-center-an-absolutely-positioned-element-in-a-div
+export default function Home() {
   return (
-    <Box bgcolor="#4A5553" padding={1}>
-      <Item marginBottom={1}>
-        <TopBar/>
-      </Item>
-      <Item position="relative">
-        <PolygonContext.Provider value={newPoly}>
-          <Mapper
-            category={category}
-            handleOpen={handleOpen}
-            newPoly={newPoly}
-            notesCreated={notesCreated}/>
-          <CategorySelect handleChange={handleCategoryChange} />
-          <PolygonCreationDialog
-            open={open}
-            handleClose={handleClose}
-            newPoly={newPoly} />
-        </PolygonContext.Provider>
-      </Item>
+    // <Box style={{position: "absolute", top: 0, left: 0, bottom: 0, right: 0, overflow: "auto", background: "white"}}>
+    <Box sx={{ display: "flex"}}>
+      <TopBar />
+      <Box
+        component="main"
+        sx={{
+          backgroundColor: (theme) =>
+            theme.palette.mode === 'light'
+              ? theme.palette.grey[100]
+              : theme.palette.grey[900],
+          flexGrow: 1,
+          height: '100vh',
+          overflow: 'auto',
+        }}>
+          <Grid container>
+            <Grid item xs={12}>
+              {/* <Box 
+                component="img"
+                sx={{
+                  height: 500,
+                  width: 500
+                }}
+              /> */}
+              <Image src={naturgemalde}/>
+            </Grid>
+          </Grid>
+      </Box>
     </Box>
   );
 }
-
-export default Home;

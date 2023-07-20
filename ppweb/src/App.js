@@ -1,4 +1,6 @@
 import Home from './components/home/Home';
+import MapHome from './components/mapping/MapHome';
+import Registration from './components/registration/Registration';
 import Error from './components/routing/Error';
 import { Route, Routes } from 'react-router-dom';
 
@@ -6,7 +8,8 @@ function App() {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
-      <Route path="/onboarding" element={<Registration/>}/>
+      <Route path="/maps" element={<MapHome />} />
+      <Route path="/onboarding" element={<Registration />}/>
       <Route path="*" element={<Error />} />
     </Routes>
   );

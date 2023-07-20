@@ -12,4 +12,6 @@ import java.util.Optional;
 public interface MapService {
     public TrashGeoJSON saveTrash(TrashGeoJSON trash) throws IllegalArgumentException;
     public Optional<HashMap<String, TrashGeoJSON>> getAllTrash();
+
+    void deleteTrash(String trashGeoJSONId);
 }

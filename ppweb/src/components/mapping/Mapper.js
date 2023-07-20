@@ -9,8 +9,7 @@ import PolygonPopup from './PolygonPopup';
 //https://docs.mapbox.com/mapbox-gl-js/example/geojson-polygon/
 //need to correctly add fill layer for mapbox-gl-draw-hot/cold polygons to enable mouseenter/leave events
 
-const TOKEN = 'pk.eyJ1IjoibWJ5cm5lNTEwIiwiYSI6ImNsanNwZWFtYTBvb2gzanJ5ZnlxNzd6YmUifQ.5qWHPh7lJfu39gxmdM3Fcw';
-mapboxgl.accessToken = TOKEN;
+mapboxgl.accessToken = process.env.MAPBOX_ACCESS_TOKEN;
 
 export default function Mapper(props) {
   const mapContainer = useRef(null);
