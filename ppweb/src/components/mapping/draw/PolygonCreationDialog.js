@@ -1,5 +1,5 @@
 import { useState, useContext } from 'react';
-import { PolygonContext } from './context/PolygonContext';
+import { PolygonContext } from '../context/PolygonContext';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
@@ -21,6 +21,7 @@ export default function PolygonCreationDialog(props) {
   }
 
   const onClose = () => {
+    console.log(newPoly)
     axios.post(`http://localhost:8080/api/trash`, {
       id: newPoly.current.id,
       type: "Feature",

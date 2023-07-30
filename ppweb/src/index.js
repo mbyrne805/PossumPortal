@@ -14,7 +14,7 @@ import { createBrowserRouter, RouterProvider, BrowserRouter } from "react-router
 //   }
 // ])
 
-//https://stefaniq.com/migrating-your-react-app-to-next-js-a-comprehensive-guide/
+//https://stefaniq.com/migrating-your-react-app-to-next-js-a-comprehensive-guide/4
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

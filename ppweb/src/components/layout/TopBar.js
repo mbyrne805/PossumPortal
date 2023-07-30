@@ -187,15 +187,25 @@ function TopBar(props) {
                 </Menu>
               </> :
               <>
-                {accountPages.map((accountPage) => (
-                  <Button
-                    key={accountPage}
-                    component={Link}
-                    to="/onboarding"
-                    onClick={handleCloseNavMenu}
-                    sx={{ my: 2, color: 'white', display: 'flex' }} >
-                    <Typography>{accountPage}</Typography>
-                  </Button>
+                { //TODO: check for user auth in conditional
+                accountPages.map((accountPage) => (
+                  accountPage === "Log in" ?
+                    <Button
+                      key={accountPage}
+                      component={Link}
+                      to="/login"
+                      onClick={handleCloseNavMenu}
+                      sx={{ my: 2, color: 'white', display: 'flex' }} >
+                        <Typography>{accountPage}</Typography>
+                    </Button> : 
+                    <Button
+                      key={accountPage}
+                      component={Link}
+                      to="/onboarding"
+                      onClick={handleCloseNavMenu}
+                      sx={{ my: 2, color: 'white', display: 'flex' }} >
+                        <Typography>{accountPage}</Typography>
+                  </Button>                  
                 ))}
               </>
             }

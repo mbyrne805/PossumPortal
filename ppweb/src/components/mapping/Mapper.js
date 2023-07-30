@@ -4,7 +4,8 @@ import axios from 'axios';
 import mapboxgl from '!mapbox-gl'; // eslint-disable-line import/no-webpack-loader-syntax
 import MapboxDraw from '@mapbox/mapbox-gl-draw';
 import MapboxStyle from './style/DrawStyle';
-import PolygonPopup from './PolygonPopup';
+import PolygonPopup from './draw/PolygonPopup';
+import DrawControlGroup from './draw/DrawControlGroup';
 
 //https://docs.mapbox.com/mapbox-gl-js/example/geojson-polygon/
 //need to correctly add fill layer for mapbox-gl-draw-hot/cold polygons to enable mouseenter/leave events
@@ -20,10 +21,16 @@ export default function Mapper(props) {
   const [lat, setLat] = useState(32.44206);
   const [zoom, setZoom] = useState(14);
   const [polygonFeatures, setPolygonFeatures] = useState(null);
+  const action = useRef(null);
   const category = useRef(null);
   const [cont, setCont] = useState(true);
 
   useEffect(() => {
+    action.current = props.action;
+    if (action.current === "geometry") {
+      draw.current.options.controls.polygon = true;
+    }
+    console.log(draw.current)
     category.current = props.category;
   });
 
@@ -34,19 +41,21 @@ export default function Mapper(props) {
       container: mapContainer.current,
       style: 'mapbox://styles/mapbox/satellite-v9',
       center: [lng, lat],
-      zoom: zoom
+      zoom: zoom,
+      attributionControl: false
     });
 
     draw.current = new MapboxDraw({
       userProperties: true,
       displayControlsDefault: false,
       controls: {
-        polygon: true,
-        trash: true
+        polygon: action.current === "geometry" ? true : false,
+        trash: action.current === "geometry" ? true : false
       },
       defaultMode: 'draw_polygon',
       styles: MapboxStyle.styles
     });
+    console.log(draw.current);
   
     map.current.addControl(draw.current);
 
@@ -275,7 +284,9 @@ export default function Mapper(props) {
       <div
         ref={mapContainer}
         className="map-container"
-        style={{height: "850px"}} />
+        style={{width: "100vw", height: "100vh"}} 
+      />
+      {props.action === "geometry" ? <DrawControlGroup map={map.current} draw={draw.current} /> : <></>}
       <PolygonPopup map={map.current} newPoly={props.newPoly}/>
     </>
   );
