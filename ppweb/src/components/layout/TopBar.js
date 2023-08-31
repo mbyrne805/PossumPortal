@@ -45,7 +45,7 @@ function TopBar(props) {
   console.log(props.trigger);
 
   return (
-    <AppBar sx={{bgcolor: props.trigger ? "#099148" : "transparent"}}>
+    <AppBar sx={{bgcolor: props.trigger ? "#2b611f" : "transparent"}}>
       <Container maxWidth={false}>
         <Toolbar disableGutters sx={{}}>
           <SvgIcon
@@ -135,15 +135,26 @@ function TopBar(props) {
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {generalPages.map((generalPage) => {
-              const route = generalPage.toLowerCase();
-              return (<Button
-                component={Link}
-                to={`/${route}`}
-                key={generalPage}
-                onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: 'white', display: 'block' }} >
-                <Typography>{generalPage}</Typography>
-              </Button>)
+              //Community/Modeling pages not ready yet
+              if (generalPage === "Community" || generalPage === "Modeling") {
+                return (<Button
+                  component={Link}
+                  key={generalPage}
+                  onClick={handleCloseNavMenu}
+                  sx={{ my: 2, color: 'white', display: 'block' }} >
+                  <Typography>{generalPage}</Typography>
+                </Button>);  
+              } else {
+                const route = generalPage.toLowerCase();
+                return (<Button
+                  component={Link}
+                  to={`/${route}`}
+                  key={generalPage}
+                  onClick={handleCloseNavMenu}
+                  sx={{ my: 2, color: 'white', display: 'block' }} >
+                  <Typography>{generalPage}</Typography>
+                </Button>)  
+              }
             }
             )}
           </Box>

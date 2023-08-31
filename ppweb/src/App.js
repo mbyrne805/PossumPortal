@@ -1,5 +1,6 @@
 import Home from './components/home/Home';
 import MapHome from './components/mapping/MapHome';
+import ProjectsWrapper from './components/mapping/ProjectsWrapper';
 import Login from './components/user/Login';
 import Registration from './components/user/Registration';
 import Error from './components/routing/Error';

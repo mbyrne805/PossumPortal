@@ -8,14 +8,8 @@ import CategorySelect from './draw/CategorySelect';
 import DrawControlGroup from './draw/DrawControlGroup';
 import PolygonCreationDialog from './draw/PolygonCreationDialog';
 import { PolygonContext } from '../mapping/context/PolygonContext';
-import BackButton from './generalControl/BackButton';
+import AppsButton from './generalControl/AppsButton';
 import ActionMenu from './generalControl/ActionMenu';
-
-const theme = createTheme({
-  typography: {
-    
-  }
-});
 
 function Item(props) {
   const { sx, padding, ...other } = props;
@@ -39,12 +33,11 @@ function Item(props) {
   );
 }
 
-//use speed dial here
-
-function MapHome() {
+function MapHome(props) {
   const [action, setAction] = useState("null");
   const [category, setCategory] = useState("trash");
   const [open, setOpen] = useState(false);
+  const [drawerOpen, setDrawerOpen] = useState(false);
   const newPoly = useRef(null);
   const [notesCreated, setNotesCreated] = useState(false);
 
@@ -56,6 +49,14 @@ function MapHome() {
     e.preventDefault();
     setAction(operation);
   };
+
+  const handleDrawerOpen = () => {
+    setDrawerOpen(true);
+  };
+
+  const handleDrawerClose = () => {
+    setDrawerOpen(false);
+  }
 
   const handleOpen = (newPol) => {
     newPoly.current = newPol
@@ -69,27 +70,34 @@ function MapHome() {
     setOpen(false);
     setNotesCreated(true);
   };
+
+  if (action === "geometry") {
+    document.getElementsByClassName("mapboxgl-ctrl-group")[0].style.display = ""
+  } else if (action === "search" || action === "dataset") {
+    console.log(document.getElementsByClassName("mapbox-ctrl-group"))
+    document.getElementsByClassName("mapbox-ctrl-group")[0].style.display = false;
+  }
+
   console.log(action);
 //https://stackoverflow.com/questions/1776915/how-can-i-center-an-absolutely-positioned-element-in-a-div
   return (
-    <Box>
-      <Item>
-        {/* <PolygonContext.Provider value={newPoly}> */}
-          <Mapper
-            action={action}
-            category={category}
-            handleOpen={handleOpen}
-            newPoly={newPoly}
-            notesCreated={notesCreated}/>
-          <BackButton />
-          {action === "geometry" ? <CategorySelect category={category} handleChange={handleCategoryChange} /> : <></>}
-          <ActionMenu handleChange={handleActionChange}/>
-          <PolygonCreationDialog
-            open={open}
-            handleClose={handleClose}
-            newPoly={newPoly} />
-      </Item>
-    </Box>
+    <>
+      <Mapper
+        action={action}
+        category={category}
+        handleOpen={handleOpen}
+        drawerOpen={drawerOpen}
+        handleDrawerClose={handleDrawerClose}
+        newPoly={newPoly}
+        notesCreated={notesCreated}/>
+      <AppsButton />
+      {action === "geometry" ? <CategorySelect category={category} handleChange={handleCategoryChange} /> : <></>}
+      <ActionMenu handleChange={handleActionChange} handleDrawerOpen={handleDrawerOpen} />
+      <PolygonCreationDialog
+        open={open}
+        handleClose={handleClose}
+        newPoly={newPoly} />
+    </>
   );
 }
 

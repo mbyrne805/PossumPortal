@@ -1,14 +1,37 @@
 import * as React from 'react';
-import {useState, useEffect, useRef, useContext} from 'react';
+import {useState, useEffect, useRef} from 'react';
+import { styled, useTheme } from '@mui/material/styles';
 import axios from 'axios';
 import mapboxgl from '!mapbox-gl'; // eslint-disable-line import/no-webpack-loader-syntax
 import MapboxDraw from '@mapbox/mapbox-gl-draw';
 import MapboxStyle from './style/DrawStyle';
 import PolygonPopup from './draw/PolygonPopup';
-import DrawControlGroup from './draw/DrawControlGroup';
+import ProjectsMenu from './generalControl/ProjectsMenu';
 
-//https://docs.mapbox.com/mapbox-gl-js/example/geojson-polygon/
-//need to correctly add fill layer for mapbox-gl-draw-hot/cold polygons to enable mouseenter/leave events
+var StaticMode = require('@mapbox/mapbox-gl-draw-static-mode');
+
+const drawerWidth = 250;
+
+const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'drawerOpen' })(
+  ({ theme, drawerOpen }) => ({
+    flexGrow: 1,
+    transition: theme.transitions.create('margin', {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
+    }),
+    // marginLeft: `-${drawerWidth}px`,
+    marginLeft: drawerOpen ? `-${drawerWidth}px` : 0,
+    ...(drawerOpen && {
+      transition: theme.transitions.create('margin', {
+        easing: theme.transitions.easing.easeOut,
+        duration: theme.transitions.duration.enteringScreen,
+      }),
+      marginLeft: 0,
+    }),
+    width: "100vw",
+    height: "100vh"
+  }),
+);
 
 mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_ACCESS_TOKEN;
 
@@ -16,7 +39,6 @@ export default function Mapper(props) {
   const mapContainer = useRef(null);
   const map = useRef(null);
   const draw = useRef(null);
-  // const popup = useRef(null);
   const [lng, setLng] = useState(-110.730464);
   const [lat, setLat] = useState(32.44206);
   const [zoom, setZoom] = useState(14);
@@ -25,18 +47,16 @@ export default function Mapper(props) {
   const category = useRef(null);
   const [cont, setCont] = useState(true);
 
+  const theme = useTheme();
+
   useEffect(() => {
     action.current = props.action;
-    if (action.current === "geometry") {
-      draw.current.options.controls.polygon = true;
-    }
-    console.log(draw.current)
     category.current = props.category;
   });
 
   useEffect(() => {
     if (map.current) return;
-
+    console.log('test')
     map.current = new mapboxgl.Map({
       container: mapContainer.current,
       style: 'mapbox://styles/mapbox/satellite-v9',
@@ -45,19 +65,34 @@ export default function Mapper(props) {
       attributionControl: false
     });
 
+    var modes = MapboxDraw.modes;
+    modes.static = StaticMode;
+
     draw.current = new MapboxDraw({
       userProperties: true,
       displayControlsDefault: false,
       controls: {
-        polygon: action.current === "geometry" ? true : false,
-        trash: action.current === "geometry" ? true : false
+        point: true,
+        line_string: true,
+        polygon: true,
+        combine_features: true,
+        uncombine_features: true,
+        trash: true
       },
+      modes: modes,
       defaultMode: 'draw_polygon',
       styles: MapboxStyle.styles
     });
     console.log(draw.current);
   
     map.current.addControl(draw.current);
+
+
+    map.current.on('load', function() {
+      draw.current.changeMode('static');
+    });
+
+    document.getElementsByClassName('mapboxgl-ctrl-group')[0].style.display = 'none'
 
     if (props.newPoly.current) {
       draw.current.add(props.newPoly.current);
@@ -101,7 +136,6 @@ export default function Mapper(props) {
       }
       let newPoly = e.features[0];
       newPoly.properties.user = "Matt"
-      // draw.current.add(newPoly);
       props.handleOpen(newPoly);
   
       setPolygonFeatures(currFeatures => {
@@ -113,7 +147,6 @@ export default function Mapper(props) {
       });
     }
 
-    //need to persist notes below, currently """"
     const onUpdate = (e) => {
       for (const f of e.features) {
         axios.post('http://localhost:8080/api/trash', {
@@ -162,19 +195,10 @@ export default function Mapper(props) {
       for (let id in results.data) {
         pgId = draw.current.add(results.data[id]);
       }
-      //TODO (SERVER): repeat for all category endpoints
       setPolygonFeatures(results.data);
-
-      //https://gist.github.com/dnseminara/0790e53cef9867e848e716937727ab18
-      //https://stackoverflow.com/questions/60085087/add-onclick-to-a-mapbox-marker-element
     };
 
     getTrashPolygons();
-
-    // const popup = new mapboxgl.Popup({
-    //   closeButton: false,
-    //   closeOnClick: false
-    // });
        
     map.current.on('idle', function() {
       if (!map.current.getLayer('polygons-hot')) {
@@ -198,96 +222,34 @@ export default function Mapper(props) {
         });
       }  
     });
-
-    // map.current.on('mouseenter', 'polygons-hot', (e) => {
-    //   console.log(e);
-    //   // Change the cursor style as a UI indicator.
-    //   // map.current.getCanvas().style.cursor = 'pointer';
-       
-    //   const coordinates = e.features[0].geometry.coordinates.slice();
-    //   // const severity = e.features[0].properties.severity;
-
-    //   const turfPoly = polygon(coordinates);
-    //   const turfCentroid = centroid(turfPoly);
-
-    //   const user = e.features[0].properties.user_user;
-    //   const date = e.features[0].properties.user_date;
-    //   const notes = e.features[0].properties.user_notes;
-
-    //   const popupHtml = `
-    //     <h3>Trash AoI</h3>
-    //     <h4>${props.test}</h4> 
-    //     <h4>by ${props.test} on ${props.test}</h4>  
-    //   `;
-
-    //   //https://gis.stackexchange.com/questions/279127/how-to-add-css-styling-in-mapbox-gl-popup
-    //   popup.setLngLat(turfCentroid.geometry.coordinates).setHTML(popupHtml).addTo(map.current);
-    // });
-
-    // map.current.on('mouseleave', 'polygons-hot', () => {
-    //   // map.current.getCanvas().style.cursor = 'pointer';
-    //   popup.remove();
-    // });
-
-    // map.current.on('mouseenter', 'polygons-cold', (e) => {
-    //   console.log(e);
-    //   // map.current.getCanvas().style.cursor = 'pointer';
-       
-    //   const coordinates = e.features[0].geometry.coordinates.slice();
-    //   // const severity = e.features[0].properties.severity;
-
-    //   const turfPoly = polygon(coordinates);
-    //   const turfCentroid = centroid(turfPoly);
-    //   //https://gis.stackexchange.com/questions/279127/how-to-add-css-styling-in-mapbox-gl-popup
-      
-    //   const user = e.features[0].properties.user_user;
-    //   const date = e.features[0].properties.user_date;
-    //   const notes = e.features[0].properties.user_notes;
-      
-    //   const popupHtml = `
-    //     <h3>Trash AoI</h3>
-    //     <h4>${props.test}</h4> 
-    //     <h4>by ${props.test} on ${props.test}</h4>  
-    //   `;
-
-    //   popup.setLngLat(turfCentroid.geometry.coordinates).setHTML(popupHtml).addTo(map.current);
-    // });
-
-    // map.current.on('mouseleave', 'polygons-cold', (e) => {
-    //   // map.current.getCanvas().style.cursor = 'pointer';
-    //   popup.remove();
-    // });
   });
 
   useEffect(() => {
     if (map.current && props.notesCreated && cont) {
       const getTrashPolygons = async () => {
         const results = await axios('http://localhost:8080/api/trash');
-        console.log(results);
         let pgId;
         for (let id in results.data) {
           pgId = draw.current.add(results.data[id]);
         }
-        //TODO (SERVER): repeat for all category endpoints
         setCont(false);
-  
-        //https://gist.github.com/dnseminara/0790e53cef9867e848e716937727ab18
-        //https://stackoverflow.com/questions/60085087/add-onclick-to-a-mapbox-marker-element
-      };
-  
-      getTrashPolygons();  
+        setPolygonFeatures(results.data);
+        };
+      getTrashPolygons();
     }
   });
 
   return (
     <>
-      <div
-        ref={mapContainer}
-        className="map-container"
-        style={{width: "100vw", height: "100vh"}} 
-      />
-      {props.action === "geometry" ? <DrawControlGroup map={map.current} draw={draw.current} /> : <></>}
-      <PolygonPopup map={map.current} newPoly={props.newPoly}/>
+      <ProjectsMenu drawerOpen={props.drawerOpen} drawerWidth={drawerWidth}/>
+      <Main open={props.drawerOpen}>
+        <div
+          ref={mapContainer}
+          className="map-container"
+          style={{width: "100%", height: "100%"}} 
+        />
+        <PolygonPopup map={map.current} newPoly={props.newPoly}/>
+      </Main>
     </>
   );
 }

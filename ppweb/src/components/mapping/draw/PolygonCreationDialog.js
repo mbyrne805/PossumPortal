@@ -12,7 +12,7 @@ import axios from 'axios';
 export default function PolygonCreationDialog(props) {
   const { open, handleClose, newPoly } = props;
 
-  const [notes, setNotes] = useState(null);
+  const [notes, setNotes] = useState("");
 
   const polygonContext = useContext(PolygonContext);
 
@@ -22,6 +22,8 @@ export default function PolygonCreationDialog(props) {
 
   const onClose = () => {
     console.log(newPoly)
+    const dateTime = new Date().toLocaleString([], { hour12: false }
+    );
     axios.post(`http://localhost:8080/api/trash`, {
       id: newPoly.current.id,
       type: "Feature",
@@ -29,11 +31,12 @@ export default function PolygonCreationDialog(props) {
         category: "trash",
         notes: notes,
         user: newPoly.current.properties.user,
-        date: newPoly.current.properties.date
+        date: dateTime
       },
       geometry: {coordinates: newPoly.current.geometry.coordinates, type: "Polygon"}
     });
     newPoly.current.properties.notes = notes;
+    newPoly.current.properties.date = dateTime;
     setNotes("");
     handleClose(newPoly.current);
   }

@@ -14,9 +14,10 @@ export default function CategorySelect(props) {
         right: 50,
         padding: 5,
         borderRadius: 4,
-        minWidth: 50,
+        width: 112,
         height: 30,
         fontSize: 14,
+        fontWeight: "bold"
       }}>
       <option value="trash">Trash</option>
       <option value="ecology">Ecology</option>

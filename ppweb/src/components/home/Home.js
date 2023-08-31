@@ -52,7 +52,7 @@ export default function Home() {
           </Grid>
           <Intro />
         </Grid>
-        <SectionIntro />
+        {/* <SectionIntro /> */}
         <Copyright sx={{ pt: 4 }} />
       </Box>
     </Box>
