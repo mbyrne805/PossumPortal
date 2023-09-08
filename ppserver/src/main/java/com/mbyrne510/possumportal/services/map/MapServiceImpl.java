@@ -30,7 +30,7 @@ public class MapServiceImpl implements MapService {
         trash.setId(trashGeoJSON.getId());
         trash.setNotes(trashGeoJSON.getProperties().getNotes());
         LocalDateTime now = LocalDateTime.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd, HH:mm:ss");
         String formatted = now.format(formatter);
         trash.setDate(formatted);
         trash.setUser(trashGeoJSON.getProperties().getUser());

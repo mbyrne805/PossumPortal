@@ -6,11 +6,11 @@ import mapboxgl from '!mapbox-gl'; // eslint-disable-line import/no-webpack-load
 import MapboxDraw from '@mapbox/mapbox-gl-draw';
 import MapboxStyle from './style/DrawStyle';
 import PolygonPopup from './draw/PolygonPopup';
-import ProjectsMenu from './generalControl/ProjectsMenu';
+import ProjectsMenu from './project/ProjectsMenu';
 
 var StaticMode = require('@mapbox/mapbox-gl-draw-static-mode');
 
-const drawerWidth = 250;
+const drawerWidth = "25%";
 
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'drawerOpen' })(
   ({ theme, drawerOpen }) => ({
