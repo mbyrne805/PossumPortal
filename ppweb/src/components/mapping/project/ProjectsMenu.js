@@ -4,6 +4,7 @@ import {
   Accordion,
   AccordionSummary,
   AccordionDetails,
+  Button,
   Drawer,
   List,
   Typography,
@@ -13,6 +14,7 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
+  Stack,
 } from '@mui/material';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
@@ -21,6 +23,13 @@ import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
 import Project from './Project.js';
 import ProjectDetails from './ProjectDetails.js';
+
+const ProjectsList = styled(List)({
+  backgroundColor: "rgba(71, 98, 130, 0.2)",
+  borderRadius: 10,
+  margin: 20
+});
+
 
 export default function ProjectsMenu(props) {
   const theme = useTheme()
@@ -38,6 +47,8 @@ export default function ProjectsMenu(props) {
   const handleDetailsSelect = () => {
     setDetails(true);
   }
+
+  const projectTypes = ["Personal", "Groups", "Public"];
 
   return (
     <Drawer
@@ -60,57 +71,31 @@ export default function ProjectsMenu(props) {
     >
     {details ? <ProjectDetails projNum={1} /> :
       <>
-        <DrawerHeader sx={{display: "flex", justifyContent: "space-between"}}>
-          <Typography variant="h6" fontWeight="bold">Current Projects</Typography>
+        <DrawerHeader sx={{display: "flex", justifyContent: "center"}}>
+          <Typography color="white" variant="h5" fontWeight="bold">Current Projects</Typography>
           {/* <IconButton onClick={props.handleDrawerClose}>
             {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
           </IconButton> */}
         </DrawerHeader>
-        <Accordion>
-          <AccordionSummary
-            expandIcon={<ExpandMoreIcon />}
-            aria-controls="panel1a-content"
-            id="panel1a-header"
-          >
-            <Typography fontWeight="bold">Personal</Typography>
-          </AccordionSummary>
-          <AccordionDetails>
-            <Project projNum={1} handleDetailsSelect={handleDetailsSelect} />
-            <Project projNum={2} />
-            <Project projNum={3} />
-          </AccordionDetails>
-        </Accordion>
-        <Accordion>
-          <AccordionSummary
-            expandIcon={<ExpandMoreIcon />}
-            aria-controls="panel1a-content"
-            id="panel1a-header"
-          >
-            <Typography fontWeight="bold">Groups</Typography>
-          </AccordionSummary>
-          <AccordionDetails>
-            <Typography>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-              malesuada lacus ex, sit amet blandit leo lobortis eget.
-            </Typography>
-          </AccordionDetails>
-        </Accordion>
-        <Accordion>
-          <AccordionSummary
-            expandIcon={<ExpandMoreIcon />}
-            aria-controls="panel1a-content"
-            id="panel1a-header"
-            sx={{display: "flex", justifyContent: "center"}}
-          >
-            <Typography fontWeight="bold">Public</Typography>
-          </AccordionSummary>
-          <AccordionDetails>
-            <Typography>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-              malesuada lacus ex, sit amet blandit leo lobortis eget.
-            </Typography>
-          </AccordionDetails>
-        </Accordion>
+        <Divider />
+        {projectTypes.map((projectType) => {
+          return (
+            <ProjectsList>
+              <ListItemButton sx={{display: "flex", justifyContent: "center", textAlign: "center"}}>
+                <ListItemText
+                  sx={{ my: 0 }}
+                  primary={projectType}
+                  primaryTypographyProps={{
+                    fontSize: "1.25rem",
+                    fontWeight: 'bold',
+                    letterSpacing: 0,
+                    color: "rgb(102, 157, 246)"
+                  }}
+                />
+`              </ListItemButton>
+            </ProjectsList>
+          );
+        })}
       </>}
     </Drawer>
   )

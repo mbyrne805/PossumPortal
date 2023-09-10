@@ -30,7 +30,7 @@ const data = [
   { icon: <Public/>, label: "Publish"}
 ];
 
-const FireNav = styled(List)({
+const DetailsNav = styled(List)({
   '& .MuiListItemButton-root': {
     paddingLeft: 24,
     paddingRight: 24,
@@ -65,7 +65,7 @@ export default function ProjectDetails(props) {
         })}
       >
         <Paper elevation={0} sx={{ width: 400 }}>
-          <FireNav component="nav" disablePadding>
+          <DetailsNav component="nav" disablePadding>
             <ListItemButton component="a" href="#customized-list">
               <ListItemIcon sx={{ fontSize: 50 }}>{"\u25bc"}</ListItemIcon>
               <ListItemText
@@ -196,7 +196,7 @@ export default function ProjectDetails(props) {
                   </ListItemButton>
                 ))}
             </Box>
-          </FireNav>
+          </DetailsNav>
         </Paper>
       </ThemeProvider>
     </Box>
