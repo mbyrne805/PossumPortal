@@ -10,7 +10,7 @@ import ProjectsMenu from './project/ProjectsMenu';
 
 var StaticMode = require('@mapbox/mapbox-gl-draw-static-mode');
 
-const drawerWidth = "25%";
+const drawerWidth = 350;
 
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'drawerOpen' })(
   ({ theme, drawerOpen }) => ({
@@ -191,6 +191,7 @@ export default function Mapper(props) {
 
     const getTrashPolygons = async () => {
       const results = await axios('http://localhost:8080/api/trash');
+      console.log(results);
       let pgId;
       for (let id in results.data) {
         pgId = draw.current.add(results.data[id]);
@@ -238,10 +239,10 @@ export default function Mapper(props) {
       getTrashPolygons();
     }
   });
-
+  console.log(polygonFeatures)
   return (
     <>
-      <ProjectsMenu drawerOpen={props.drawerOpen} drawerWidth={drawerWidth}/>
+      <ProjectsMenu projects={polygonFeatures} drawerOpen={props.drawerOpen} drawerWidth={drawerWidth}/>
       <Main open={props.drawerOpen}>
         <div
           ref={mapContainer}

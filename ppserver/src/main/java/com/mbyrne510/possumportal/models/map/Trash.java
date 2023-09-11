@@ -22,6 +22,7 @@ import java.util.List;
 public class Trash {
     @Id
     private String id;
+    private String projectName;
     private ArrayList<ArrayList<ArrayList<Double>>> polygonCoords;
     private String date;
     private String user;

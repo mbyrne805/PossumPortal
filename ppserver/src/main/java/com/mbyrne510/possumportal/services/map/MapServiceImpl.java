@@ -49,7 +49,6 @@ public class MapServiceImpl implements MapService {
         HashMap<String, TrashGeoJSON> trashResults = new HashMap<>();
         List<Trash> trashList = trashRepo.findAll();
         List<TrashGeoJSON> trashGeoJSONs = new ArrayList<>(trashList.size());
-        System.out.println(trashGeoJSONs.size());
         for (int i = 0; i < trashList.size(); i++) {
             trashResults.put(trashList.get(i).getId(), new TrashGeoJSON(
                 trashList.get(i).getId(),
@@ -58,7 +57,8 @@ public class MapServiceImpl implements MapService {
                 trashList.get(i).getPolygonCoords(),
                 trashList.get(i).getNotes(),
                 trashList.get(i).getUser(),
-                trashList.get(i).getDate()
+                trashList.get(i).getDate(),
+                trashList.get(i).getProjectName()
             ));
         }
         return Optional.of(trashResults);

@@ -46,6 +46,7 @@ const DetailsNav = styled(List)({
 
 export default function ProjectDetails(props) {
   const [open, setOpen] = React.useState(true);
+  console.log(props.handleDetailsSelect)
   return (
     <Box sx={{ display: 'flex' }}>
       <ThemeProvider
@@ -80,7 +81,7 @@ export default function ProjectDetails(props) {
             </ListItemButton>
             <Divider />
             <ListItem component="div" disablePadding>
-              <ListItemButton sx={{ height: 56 }}>
+              <ListItemButton sx={{ height: 56 }} onClick={props.handleDetailsSelect}>
                 <ListItemIcon>
                   <Home color="primary" />
                 </ListItemIcon>
