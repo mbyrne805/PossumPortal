@@ -21,7 +21,7 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
-import Project from './Project.js';
+import _ from 'lodash';
 import ProjectDetails from './ProjectDetails.js';
 
 const ProjectsList = styled(List)({
@@ -44,20 +44,23 @@ export default function ProjectsMenu(props) {
 
   const [open, setOpen] = React.useState(false);
   const [details, setDetails] = React.useState(false);
+  const [projectName, setProjectName] = React.useState("");
 
   const handleOpen = () => {
     setOpen(!open);
   }
 
-  const handleDetailsSelect = () => {
+  const handleDetailsSelect = (projectName) => {
+    console.log(projectName);
     setDetails(!details);
+    setProjectName(projectName)
   }
 
   const projectTypes = ["Personal", "Groups", "Public"];
-  const projectsArr = props.projects && Object.keys(props.projects).map(function(key) {
+  let projectsArr = props.projects && Object.keys(props.projects).map(function(key) {
     return props.projects[key];
   });
-  console.log(projectsArr)
+  projectsArr = _.sortBy(projectsArr, o => o.properties.projectName);
 
   return (
     <Drawer
@@ -78,7 +81,11 @@ export default function ProjectsMenu(props) {
       anchor="left"
       open={props.drawerOpen}
     >
-    {details ? <ProjectDetails projNum={1} handleDetailsSelect={handleDetailsSelect} /> :
+    {details ? <ProjectDetails
+      projNum={1}
+      handleDetailsSelect={handleDetailsSelect}
+      projectName={projectName}
+    /> :
     <>
       <DrawerHeader sx={{display: "flex", justifyContent: "center"}}>
         <Typography color="white" variant="h5" fontWeight="bold">Current Projects</Typography>
@@ -105,22 +112,23 @@ export default function ProjectsMenu(props) {
                 }}
               />
             </ListItemButton>
-            {open &&
+            {open && projectType === "Personal" &&
               projectsArr.map((project) => {
                 console.log(project)
                 return(
                   <ListItemButton
-                  key={project.projectName}
-                  sx={{ py: "0.5rem", minHeight: 32, color: 'rgba(255,255,255,.8)' }}
-                >
-                  {/* <ListItemIcon sx={{ color: 'inherit' }}>
-                    {item.icon}
-                  </ListItemIcon> */}
-                  <ListItemText
-                    primary={`${project.properties.projectName}`}
-                    primaryTypographyProps={{ fontSize: 14, fontWeight: 'medium' }}
-                  />
-                </ListItemButton>
+                    key={project.projectName}
+                    sx={{ py: "0.5rem", minHeight: 32, color: 'rgba(255,255,255,.8)' }}
+                    onClick={() => handleDetailsSelect(project.properties.projectName)}
+                  >
+                    {/* <ListItemIcon sx={{ color: 'inherit' }}>
+                      {item.icon}
+                    </ListItemIcon> */}
+                    <ListItemText
+                      primary={`${project.properties.projectName}`}
+                      primaryTypographyProps={{ fontSize: 14, fontWeight: 'medium' }}
+                    />
+                  </ListItemButton>
                 )
               })}
           </ProjectsList>

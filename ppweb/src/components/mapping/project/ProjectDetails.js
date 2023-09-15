@@ -46,7 +46,6 @@ const DetailsNav = styled(List)({
 
 export default function ProjectDetails(props) {
   const [open, setOpen] = React.useState(true);
-  console.log(props.handleDetailsSelect)
   return (
     <Box sx={{ display: 'flex' }}>
       <ThemeProvider
@@ -71,7 +70,7 @@ export default function ProjectDetails(props) {
               <ListItemIcon sx={{ fontSize: 50 }}>{"\u25bc"}</ListItemIcon>
               <ListItemText
                 sx={{ my: 0 }}
-                primary={`Project ${props.projNum}`}
+                primary={props.projectName}
                 primaryTypographyProps={{
                   fontSize: "1.5rem",
                   fontWeight: 'medium',
