@@ -14,7 +14,7 @@
 	<name>possum-portal</name>
 	<description>MongoDB/Kafka server for Possum Portal web/mobile application</description>
 	<properties>
-		<java.version>17</java.version>
+		<java.version>1.8</java.version>
 	</properties>
 	<dependencies>
 		<dependency>
