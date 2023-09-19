@@ -1,6 +1,7 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import { styled, ThemeProvider, createTheme } from '@mui/material/styles';
+import Chip from '@mui/material/Chip';
 import Divider from '@mui/material/Divider';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
@@ -15,12 +16,29 @@ import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
 import Home from '@mui/icons-material/Home';
 import JoinFull from '@mui/icons-material/JoinFull';
 import Settings from '@mui/icons-material/Settings';
-import People from '@mui/icons-material/People';
-import PermMedia from '@mui/icons-material/PermMedia';
 import Dns from '@mui/icons-material/Dns';
 import Public from '@mui/icons-material/Public';
 import Recommend from '@mui/icons-material/Recommend';
 import Sell from '@mui/icons-material/Sell';
+
+const testTags = [
+  {
+    projectName: "Project 1",
+    name: "Eco"
+  },
+  {
+    projectName: "Project 1",
+    name: "Trash"
+  },
+  {
+    projectName: "Project 1",
+    name: "Govt"
+  },
+  {
+    projectName: "Project 1",
+    name: "Public"
+  }
+];
 
 const data = [
   { icon: <Sell />, label: 'Tags' },
@@ -45,7 +63,8 @@ const DetailsNav = styled(List)({
 });
 
 export default function ProjectDetails(props) {
-  const [open, setOpen] = React.useState(true);
+  const [infoOpen, setInfoOpen] = React.useState(true);
+  const [tagsOpen, setTagsOpen] = React.useState(false);
   return (
     <Box sx={{ display: 'flex' }}>
       <ThemeProvider
@@ -66,10 +85,10 @@ export default function ProjectDetails(props) {
       >
         <Paper elevation={0} sx={{ width: 400 }}>
           <DetailsNav component="nav" disablePadding>
-            <ListItemButton component="a" href="#customized-list">
-              <ListItemIcon sx={{ fontSize: 50 }}>{"\u25bc"}</ListItemIcon>
+            <ListItem>
+              {/* <ListItemIcon sx={{ fontSize: 50 }}>{"\u25bc"}</ListItemIcon> */}
               <ListItemText
-                sx={{ my: 0 }}
+                sx={{ my: 0, textAlign: "center" }}
                 primary={props.projectName}
                 primaryTypographyProps={{
                   fontSize: "1.5rem",
@@ -77,7 +96,7 @@ export default function ProjectDetails(props) {
                   letterSpacing: 0,
                 }}
               />
-            </ListItemButton>
+            </ListItem>
             <Divider />
             <ListItem component="div" disablePadding>
               <ListItemButton sx={{ height: 56 }} onClick={props.handleDetailsSelect}>
@@ -132,18 +151,18 @@ export default function ProjectDetails(props) {
             <Divider />
             <Box
               sx={{
-                bgcolor: open ? 'rgba(71, 98, 130, 0.2)' : null,
-                pb: open ? 2 : 0,
+                bgcolor: infoOpen ? 'rgba(71, 98, 130, 0.2)' : null,
+                pb: infoOpen ? 0 : 0,
               }}
             >
               <ListItemButton
                 alignItems="flex-start"
-                onClick={() => setOpen(!open)}
+                onClick={() => setInfoOpen(!infoOpen)}
                 sx={{
                   px: 3,
                   pt: 2.5,
-                  pb: open ? 0 : 2.5,
-                  '&:hover, &:focus': { '& svg': { opacity: open ? 1 : 0 } },
+                  pb: infoOpen ? 0 : 2.5,
+                  '&:hover, &:focus': { '& svg': { opacity: infoOpen ? 1 : 0 } },
                 }}
               >
                 <ListItemText
@@ -159,7 +178,7 @@ export default function ProjectDetails(props) {
                     noWrap: true,
                     fontSize: 12,
                     lineHeight: '16px',
-                    color: open ? 'rgba(0,0,0,0)' : 'rgba(255,255,255,0.5)',
+                    color: infoOpen ? 'rgba(0,0,0,0)' : 'rgba(255,255,255,0.5)',
                   }}
                   sx={{ my: 0 }}
                 />
@@ -167,34 +186,53 @@ export default function ProjectDetails(props) {
                   sx={{
                     mr: -1,
                     opacity: 0,
-                    transform: open ? 'rotate(-180deg)' : 'rotate(0)',
+                    transform: infoOpen ? 'rotate(-180deg)' : 'rotate(0)',
                     transition: '0.2s',
                   }}
                 />
               </ListItemButton>
-              {open &&
-                data.map((item) => (
-                  <ListItemButton
-                    key={item.label}
-                    sx={{ py: "0.5rem", minHeight: 32, color: 'rgba(255,255,255,.8)' }}
-                  >
-                    <ListItemIcon sx={{ color: 'inherit' }}>
-                      {item.icon}
-                    </ListItemIcon>
-                    <ListItemText
-                      primary={item.label}
-                      primaryTypographyProps={{ fontSize: 14, fontWeight: 'medium' }}
-                    />
-                    <KeyboardArrowDown
-                      sx={{
-                        mr: -1,
-                        opacity: 0,
-                        transform: open ? 'rotate(-180deg)' : 'rotate(0)',
-                        transition: '0.2s',
-                      }}
-                    />
-                  </ListItemButton>
-                ))}
+              {infoOpen &&
+                data.map((item) => {
+                  return (
+                    <>
+                      <ListItemButton
+                        key={item.label}
+                        sx={{ py: "0.5rem", minHeight: 32, color: 'rgba(255,255,255,.8)' }}
+                        onClick={() => setTagsOpen(!tagsOpen)}
+                      >
+                      <ListItemIcon sx={{ color: 'inherit' }}>
+                        {item.icon}
+                      </ListItemIcon>
+                      <ListItemText
+                        primary={item.label}
+                        primaryTypographyProps={{ fontSize: 14, fontWeight: 'medium' }}
+                      />
+                      <KeyboardArrowDown
+                        sx={{
+                          mr: -1,
+                          opacity: 0,
+                          transform: tagsOpen ? 'rotate(-180deg)' : 'rotate(0)',
+                          transition: '0.2s',
+                        }}
+                      />
+                      </ListItemButton>
+                      {tagsOpen && item.label === "Tags" ?
+                        <ListItem>
+                          {testTags.map((tag) => {
+                            console.log(tag)
+                            return (
+                              <Chip
+                              sx={{m: 1, mb: 2}}
+                              label={tag.name}
+                            /> 
+                            )
+                          })}
+                        </ListItem> :
+                        <></>
+                      }
+                      <Divider />
+                    </>
+                  )})}
             </Box>
           </DetailsNav>
         </Paper>
