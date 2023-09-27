@@ -122,7 +122,7 @@ export default function Mapper(props) {
       //remove for loop
       for (const f of e.features) {
         changeColor(f.id);
-        axios.post('http://localhost:8080/api/trash', {
+        axios.post('https://possum-portal-fe967e747104.herokuapp.com/api/trash', {
           id: f.id,
           type: "Feature",
           properties: {
@@ -149,7 +149,7 @@ export default function Mapper(props) {
 
     const onUpdate = (e) => {
       for (const f of e.features) {
-        axios.post('http://localhost:8080/api/trash', {
+        axios.post('https://possum-portal-fe967e747104.herokuapp.com/api/trash', {
           id: f.id,
           type: "Feature",
           properties: {
@@ -173,7 +173,7 @@ export default function Mapper(props) {
     
     const onDelete = (e) => {
       for (const f of e.features) {
-        axios.delete(`http://localhost:8080/api/trash/${f.id}`);
+        axios.delete(`https://possum-portal-fe967e747104.herokuapp.com/api/trash/${f.id}`);
       }
 
       setPolygonFeatures(currFeatures => {
@@ -190,7 +190,7 @@ export default function Mapper(props) {
     map.current.on('draw.update', onUpdate);
 
     const getTrashPolygons = async () => {
-      const results = await axios('http://localhost:8080/api/trash');
+      const results = await axios('https://possum-portal-fe967e747104.herokuapp.com/api/trash');
       console.log(results);
       let pgId;
       for (let id in results.data) {
@@ -228,7 +228,7 @@ export default function Mapper(props) {
   useEffect(() => {
     if (map.current && props.notesCreated && cont) {
       const getTrashPolygons = async () => {
-        const results = await axios('http://localhost:8080/api/trash');
+        const results = await axios('https://possum-portal-fe967e747104.herokuapp.com/api/trash');
         let pgId;
         for (let id in results.data) {
           pgId = draw.current.add(results.data[id]);
