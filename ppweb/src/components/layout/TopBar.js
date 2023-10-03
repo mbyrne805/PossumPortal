@@ -45,7 +45,7 @@ function TopBar(props) {
   console.log(props.trigger);
 
   return (
-    <AppBar sx={{bgcolor: props.trigger ? "#2b611f" : "transparent"}}>
+    <AppBar sx={{bgcolor: props.trigger ? "rgb(5, 30, 52)" : "transparent"}}>
       <Container maxWidth={false}>
         <Toolbar disableGutters sx={{}}>
           <SvgIcon

@@ -24,12 +24,12 @@ export default function ActionMenu(props) {
           position: 'absolute',
           bottom: 16,
           right: 16,
-          '& .MuiFab-primary': {'&:hover': {backgroundColor: "#2b611f"}} 
+          '& .MuiFab-primary': {'&:hover': {backgroundColor: 'rgb(5, 30, 52)'}} 
         }}
         icon={<SpeedDialIcon />}
         FabProps={{
           sx: {
-            backgroundColor: "#2b611f"
+            backgroundColor: 'rgb(5, 30, 52)'
           }
         }}
       >
