@@ -19,28 +19,34 @@ export default function PolygonCreationDialog(props) {
   const { open, handleClose, newPoly } = props;
 
   const [projName, setProjName] = useState("");
-  const [summary, setSummary] = useState("");
+  const [details, setDetails] = useState("");
   const [newTag, setNewTag] = useState("");
 
+  const [tag, setTag] = useState("");
+
   const [tags, setTags] = useState([
-    {name: "Eco"},
-    {name: "Public"},
-    {name: "Volunteer"},
-    {name: "Funded"},
-    {name: "Trash"},
-    {name: "Cleanup"},
-    {name: "Fire"},
-    {name: "Outreach"},
-    {name: "Conservation"},
-    {name: "Event"}
+    "Eco",
+    "Public",
+    "Volunteer",
+    "Funded",
+    "Trash",
+    "Cleanup",
+    "Fire",
+    "Outreach",
+    "Conservation",
+    "Event"
   ]);
 
   const onProjChange = (e) => {
     setProjName(e.target.value);
   }
 
-  const onSummaryChange = (e) => {
-    setSummary(e.target.value);
+  const onDetailsChange = (e) => {
+    setDetails(e.target.value);
+  }
+
+  const onTagChange = (e) => {
+    setTag(e.target.value);
   }
 
   const handleDelete = () => {
@@ -51,20 +57,22 @@ export default function PolygonCreationDialog(props) {
     console.log(newPoly)
     const dateTime = new Date().toLocaleString([], { hour12: false }
     );
-    axios.post(`https://possum-portal-fe967e747104.herokuapp.com/api/trash`, {
+    axios.post(`http://localhost:8080/api/project`, {
       id: newPoly.current.id,
       type: "Feature",
       properties: {
         category: "trash",
-        notes: summary,
+        details: details,
         user: newPoly.current.properties.user,
-        date: dateTime
+        date: dateTime,
+        projectName: projName,
+        tags: tags
       },
-      geometry: {coordinates: newPoly.current.geometry.coordinates, type: "Polygon"}
+      geometry: {coordinates: newPoly.current.geometry.coordinates, type: "Polygon"},
     });
-    newPoly.current.properties.summary = summary;
+    newPoly.current.properties.details = details;
     newPoly.current.properties.date = dateTime;
-    setSummary("");
+    setDetails("");
     handleClose(newPoly.current);
   }
 
@@ -86,65 +94,70 @@ export default function PolygonCreationDialog(props) {
       })}
     >
     <Dialog open={open} onClose={onClose} sx={{justifyContent: "center"}}>
-      <DialogContent 
-        sx={{justifyContent: "center", width: 300}}
-      >
-        <Stack>
-          <Stack alignItems="center">
-            <TextField
-              variant="outlined"
-              autoFocus
-              margin="dense"
-              id="name"
-              placeholder="Project Name"
-              value={projName}
-              onChange={onProjChange}
-              sx={{marginBottom: "0.25rem", width: 300}}
-            />
-            <TextField
-              autoFocus
-              margin="dense"
-              id="name"
-              variant="outlined"
-              placeholder="Details"
-              value={summary}
-              onChange={onProjChange}
-              sx={{marginBottom: "1rem", width: 300}}
-            />
-          </Stack>
-          <Divider variant="fullWidth" width={300}/>
-          <TextField
-              autoFocus
-              margin="dense"        
-              id="name"
-              variant="outlined"
-              placeholder="Tags"
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  setTags(
-                    [...tags, {name: e.target.value}]
-                  );
-                }
-              }}
-              sx={{marginY: "1rem", width: 300}}
-            />
-        </Stack>
-        <Card
-          sx={{padding: 2, boxShadow: 5}}
+      <PerfectScrollbar>
+        <DialogContent 
+          sx={{justifyContent: "center", width: 300}}
         >
-          {
-            tags.map((tag) => {
-              return (
-                <Chip 
-                  sx={{margin: "0.1rem"}}
-                  label={tag.name}
-                  onDelete={handleDelete}
-                />
-              );
-            })
-          }
-        </Card>
-      </DialogContent>
+          <Stack>
+            <Stack alignItems="center">
+              <TextField
+                variant="outlined"
+                autoFocus
+                margin="dense"
+                id="name"
+                placeholder="Project Name"
+                value={projName}
+                onChange={onProjChange}
+                sx={{marginBottom: "0.25rem", width: 300}}
+              />
+              <TextField
+                autoFocus
+                margin="dense"
+                id="name"
+                variant="outlined"
+                placeholder="Details"
+                value={details}
+                onChange={onProjChange}
+                sx={{marginBottom: "1rem", width: 300}}
+              />
+            </Stack>
+            <Divider variant="fullWidth" width={300}/>
+            <TextField
+                autoFocus
+                margin="dense"        
+                id="name"
+                variant="outlined"
+                placeholder="Tags"
+                value={tag}
+                onChange={onTagChange}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    setTags(
+                      [...tags, e.target.value]
+                    );
+                    setTag("");
+                  }
+                }}
+                sx={{marginY: "1rem", width: 300}}
+              />
+          </Stack>
+          <Card
+            sx={{padding: 2, boxShadow: 5}}
+          >
+            {
+              tags.map((tag) => {
+                return (
+                  <Chip 
+                    sx={{margin: "0.1rem"}}
+                    label={tag}
+                    onDelete={handleDelete}
+                  />
+                );
+              })
+            }
+          </Card>
+        </DialogContent>
+      </PerfectScrollbar>
       <DialogActions>
         <Button onClick={onClose}>Submit project</Button>
       </DialogActions>

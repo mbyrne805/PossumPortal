@@ -1,22 +1,18 @@
 package com.mbyrne510.possumportal.models.map.geojson;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
-import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class TrashGeoJSON extends GeoJSON {
+public class ProjectGeoJSON extends GeoJSON {
     private Properties properties;
 
-    public TrashGeoJSON(
+    public ProjectGeoJSON(
         String idInp,
         String typeInp,
         String geometryTypeInp,
@@ -24,9 +20,16 @@ public class TrashGeoJSON extends GeoJSON {
         String notesInp,
         String userInp,
         String dateInp,
-        String projectNameInp) {
+        String projectNameInp,
+        ArrayList<String> tagsInp
+        ) {
         super(idInp, typeInp, geometryTypeInp, geometryCoordsInp);
-        this.properties = new Properties(notesInp, userInp, dateInp, projectNameInp);
+        this.properties = new Properties(
+            notesInp,
+            userInp,
+            dateInp,
+            projectNameInp,
+            tagsInp);
     }
 
     @Getter
@@ -35,16 +38,18 @@ public class TrashGeoJSON extends GeoJSON {
     @NoArgsConstructor
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Properties {
-        private String notes;
+        private String details;
         private String user;
         private String date;
         private String projectName;
+        private ArrayList<String> tags;
 
-        private Properties(String notesInp, String userInp, String dateInp, String projectNameInp) {
-            notes = notesInp;
+        private Properties(String detailsInp, String userInp, String dateInp, String projectNameInp, ArrayList<String> tagsInp) {
+            details = detailsInp;
             user = userInp;
             date = dateInp;
             projectName = projectNameInp;
+            tags = tagsInp;
         }
     }
 }

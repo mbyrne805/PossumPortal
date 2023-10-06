@@ -1,13 +1,11 @@
 package com.mbyrne510.possumportal.services.map;
 
-import com.mbyrne510.possumportal.models.map.Trash;
-import com.mbyrne510.possumportal.models.map.geojson.GeoJSON;
-import com.mbyrne510.possumportal.models.map.geojson.TrashGeoJSON;
-import com.mbyrne510.possumportal.repositories.map.TrashRepository;
+import com.mbyrne510.possumportal.models.map.Project;
+import com.mbyrne510.possumportal.models.map.geojson.ProjectGeoJSON;
+import com.mbyrne510.possumportal.repositories.map.ProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.lang.reflect.Array;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -17,59 +15,72 @@ import java.util.Optional;
 
 @Service
 public class MapServiceImpl implements MapService {
-    private final TrashRepository trashRepo;
+    private final ProjectRepository projectRepo;
 
     @Autowired
-    public MapServiceImpl(TrashRepository trashRepo) {
-        this.trashRepo = trashRepo;
+    public MapServiceImpl(ProjectRepository projectRepo) {
+        this.projectRepo = projectRepo;
     }
 
     @Override
-    public TrashGeoJSON saveTrash(TrashGeoJSON trashGeoJSON) throws IllegalArgumentException {
-        Trash trash = new Trash();
-        trash.setId(trashGeoJSON.getId());
-        trash.setNotes(trashGeoJSON.getProperties().getNotes());
+    public ProjectGeoJSON saveProject(ProjectGeoJSON projectGeoJSON) throws IllegalArgumentException {
+        Project project = new Project();
+        project.setId(projectGeoJSON.getId());
+        project.setDetails(projectGeoJSON.getProperties().getDetails());
         LocalDateTime now = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd, HH:mm:ss");
         String formatted = now.format(formatter);
-        trash.setDate(formatted);
-        trash.setUser(trashGeoJSON.getProperties().getUser());
-        trash.setPolygonCoords(trashGeoJSON.getGeometry().getCoordinates());
-        System.out.println(trash.getUser());
+        project.setDate(formatted);
+        project.setUser(projectGeoJSON.getProperties().getUser());
+        project.setPolygonCoords(projectGeoJSON.getGeometry().getCoordinates());
+//        System.out.println(project.getUser());
+        project.setProjectName(projectGeoJSON.getProperties().getProjectName());
+        project.setTags(projectGeoJSON.getProperties().getTags());
+        System.out.println(project.getTags());
         try {
-            trashRepo.save(trash);
-            return trashGeoJSON;
+            projectRepo.save(project);
+            return projectGeoJSON;
         } catch (IllegalArgumentException e) {
             throw e;
         }
     }
 
     @Override
-    public Optional<HashMap<String, TrashGeoJSON>> getAllTrash() {
-        HashMap<String, TrashGeoJSON> trashResults = new HashMap<>();
-        List<Trash> trashList = trashRepo.findAll();
-        List<TrashGeoJSON> trashGeoJSONs = new ArrayList<>(trashList.size());
-        for (int i = 0; i < trashList.size(); i++) {
-            trashResults.put(trashList.get(i).getId(), new TrashGeoJSON(
-                trashList.get(i).getId(),
+    public Optional<HashMap<String, ProjectGeoJSON>> getAllProjects() {
+        HashMap<String, ProjectGeoJSON> trashResults = new HashMap<>();
+        List<Project> projectList = projectRepo.findAll();
+        List<ProjectGeoJSON> projectGeoJSONS = new ArrayList<>(projectList.size());
+        for (int i = 0; i < projectList.size(); i++) {
+            trashResults.put(projectList.get(i).getId(), new ProjectGeoJSON(
+                projectList.get(i).getId(),
                 "Feature",
                 "Polygon",
-                trashList.get(i).getPolygonCoords(),
-                trashList.get(i).getNotes(),
-                trashList.get(i).getUser(),
-                trashList.get(i).getDate(),
-                trashList.get(i).getProjectName()
+                projectList.get(i).getPolygonCoords(),
+                projectList.get(i).getDetails(),
+                projectList.get(i).getUser(),
+                projectList.get(i).getDate(),
+                projectList.get(i).getProjectName(),
+                projectList.get(i).getTags()
             ));
         }
         return Optional.of(trashResults);
     }
 
     @Override
-    public void deleteTrash(String id) {
+    public void deleteProject(String id) {
         try {
-            trashRepo.deleteById(id);
+            projectRepo.deleteById(id);
         } catch (IllegalArgumentException e) {
             throw e;
+        }
+    }
+
+    @Override
+    public void deleteAllProjects() {
+        try {
+            projectRepo.deleteAll();
+        } catch (IllegalArgumentException e) {
+
         }
     }
 }

@@ -1,7 +1,7 @@
 package com.mbyrne510.possumportal;
 
-import com.mbyrne510.possumportal.models.map.Trash;
-import com.mbyrne510.possumportal.repositories.map.TrashRepository;
+import com.mbyrne510.possumportal.models.map.Project;
+import com.mbyrne510.possumportal.repositories.map.ProjectRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -14,7 +14,7 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 @EnableMongoRepositories
 public class PossumPortalApplication implements CommandLineRunner {
 	@Autowired
-	private TrashRepository trashRepo;
+	private ProjectRepository trashRepo;
 
 	public static void main(String[] args) {
 		SpringApplication.run(PossumPortalApplication.class, args);
@@ -23,8 +23,8 @@ public class PossumPortalApplication implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 		System.out.println("Current trash results:");
-		for (Trash trashResult : trashRepo.findAll()) {
-			System.out.println(trashResult);
+		for (Project projectResult : trashRepo.findAll()) {
+			System.out.println(projectResult);
 		}
 	}
 }

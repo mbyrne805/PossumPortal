@@ -23,7 +23,7 @@ public class GeoJSON {
     public GeoJSON(String idInp, String typeInp, String geometryTypeInp, ArrayList<ArrayList<ArrayList<Double>>> geometryCoordsInp) {
         this.id = idInp;
         this.type = typeInp;
-        this.geometry = new Geometry(geometryTypeInp, geometryCoordsInp);
+        this.geometry = new Geometry(geometryCoordsInp);
     }
 
     @Getter
@@ -32,19 +32,9 @@ public class GeoJSON {
     @NoArgsConstructor
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Geometry {
-        private String type;
         private ArrayList<ArrayList<ArrayList<Double>>> coordinates;
-        public Geometry(String typeInp, ArrayList<ArrayList<ArrayList<Double>>> coordinatesInp) {
-            type = typeInp;
+        public Geometry(ArrayList<ArrayList<ArrayList<Double>>> coordinatesInp) {
             coordinates = coordinatesInp;
         }
     };
-//
-//    public void setGeometryType(String type) {
-//        geometry.setType(type);
-//    }
-//
-//    public void setGeometryCoordinates(ArrayList<ArrayList<ArrayList<Double>>> coordinates) {
-//        geometry.setCoordinates(coordinates);
-//    }
 }

@@ -122,17 +122,17 @@ export default function Mapper(props) {
       //remove for loop
       for (const f of e.features) {
         changeColor(f.id);
-        axios.post('https://possum-portal-fe967e747104.herokuapp.com/api/trash', {
-          id: f.id,
-          type: "Feature",
-          properties: {
-            category: "trash",
-            notes: "",
-            user: "Matt",
-            date: "6/27/2023"
-          },
-          geometry: {coordinates: f.geometry.coordinates, type: "Polygon"}
-        });
+        // axios.post('https://possum-portal-fe967e747104.herokuapp.com/api/trash', {
+        //   id: f.id,
+        //   type: "Feature",
+        //   properties: {
+        //     category: "trash",
+        //     notes: "",
+        //     user: "Matt",
+        //     date: "6/27/2023"
+        //   },
+        //   geometry: {coordinates: f.geometry.coordinates, type: "Polygon"}
+        // });
       }
       let newPoly = e.features[0];
       newPoly.properties.user = "Matt"
