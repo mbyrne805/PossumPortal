@@ -22,19 +22,18 @@ export default function PolygonPopup(props) {
   
       const turfPoly = polygon(coordinates);
       const turfCentroid = centroid(turfPoly);
-  
       let popupHtml;
-      if (e.features[0].properties.user_notes || e.features[0].properties.user_notes === "") {
+      if (e.features[0].properties.user_details || e.features[0].properties.user_details === "") {
         popupHtml = `
-          <h3>Trash AoI</h3>
-          <h4>${e.features[0].properties.user_notes}</h4> 
+          <h3>${e.features[0].properties.user_projectName}</h3>
+          <h4>${e.features[0].properties.user_details}</h4> 
           <h4>by ${e.features[0].properties.user_user} on ${e.features[0].properties.user_date}</h4>  
         `;
       } else {
         newPoly.current ? 
         popupHtml = `
-          <h3>Trash AoI</h3>
-          <h4>${newPoly.current.properties.notes}</h4> 
+          <h3>${e.features[0].properties.user_projectName}</h3>
+          <h4>${newPoly.current.properties.details}</h4> 
           <h4>by ${newPoly.current.properties.user} on ${newPoly.current.properties.date}</h4>  
         `: popupHtml = false;
       }
@@ -51,7 +50,6 @@ export default function PolygonPopup(props) {
     });
   
     map.on('mouseenter', 'polygons-cold', (e) => {
-      console.log(newPoly)
       // map.current.getCanvas().style.cursor = 'pointer';
       const coordinates = e.features[0].geometry.coordinates.slice();
       // const severity = e.features[0].properties.severity;
@@ -61,17 +59,16 @@ export default function PolygonPopup(props) {
       //https://gis.stackexchange.com/questions/279127/how-to-add-css-styling-in-mapbox-gl-popup
             
       let popupHtml;
-      console.log(e)
-      if (e.features[0].properties.user_notes || e.features[0].properties.user_notes === "") {
+      if (e.features[0].properties.user_details || e.features[0].properties.user_details === "") {
         popupHtml = `
-          <h3>Trash AoI</h3>
-          <h4>${e.features[0].properties.user_notes}</h4> 
+          <h3>${e.features[0].properties.user_projectName}</h3>
+          <h4>${e.features[0].properties.user_details}</h4> 
           <h4>by ${e.features[0].properties.user_user} on ${e.features[0].properties.user_date}</h4>  
         `;
       } else {
         popupHtml = `
-          <h3>Trash AoI</h3>
-          <h4>${newPoly.current.properties.notes}</h4> 
+          <h3>${e.features[0].properties.user_projectName}</h3>
+          <h4>${newPoly.current.properties.details}</h4> 
           <h4>by ${newPoly.current.properties.user} on ${newPoly.current.properties.date}</h4>  
         `;
       }

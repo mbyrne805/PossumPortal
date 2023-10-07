@@ -1,6 +1,7 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import { styled, ThemeProvider, createTheme } from '@mui/material/styles';
+import Card from '@mui/material/Card';
 import Chip from '@mui/material/Chip';
 import Divider from '@mui/material/Divider';
 import List from '@mui/material/List';
@@ -65,6 +66,9 @@ const DetailsNav = styled(List)({
 export default function ProjectDetails(props) {
   const [infoOpen, setInfoOpen] = React.useState(true);
   const [tagsOpen, setTagsOpen] = React.useState(false);
+
+  console.log(props);
+
   return (
     <Box sx={{ display: 'flex' }}>
       <ThemeProvider
@@ -89,7 +93,7 @@ export default function ProjectDetails(props) {
               {/* <ListItemIcon sx={{ fontSize: 50 }}>{"\u25bc"}</ListItemIcon> */}
               <ListItemText
                 sx={{ my: 0, textAlign: "center" }}
-                primary={props.projectName}
+                primary={props.project.properties.projectName}
                 primaryTypographyProps={{
                   fontSize: "1.5rem",
                   fontWeight: 'medium',
@@ -218,15 +222,21 @@ export default function ProjectDetails(props) {
                       </ListItemButton>
                       {tagsOpen && item.label === "Tags" ?
                         <ListItem>
-                          {testTags.map((tag) => {
-                            console.log(tag)
-                            return (
-                              <Chip
-                              sx={{m: 1, mb: 2}}
-                              label={tag.name}
-                            /> 
-                            )
-                          })}
+                          <Card
+                            sx={{padding: 2, boxShadow: 5}}
+                          >
+                            {
+                              props.project.properties.tags.map((tag) => {
+                                return (
+                                  <Chip 
+                                    sx={{margin: "0.1rem"}}
+                                    label={tag}
+                                    // onDelete={handleDelete}
+                                  />
+                                );
+                              })
+                            }
+                          </Card>
                         </ListItem> :
                         <></>
                       }

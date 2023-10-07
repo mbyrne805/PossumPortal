@@ -56,7 +56,6 @@ export default function Mapper(props) {
 
   useEffect(() => {
     if (map.current) return;
-    console.log('test')
     map.current = new mapboxgl.Map({
       container: mapContainer.current,
       style: 'mapbox://styles/mapbox/satellite-v9',
@@ -81,9 +80,8 @@ export default function Mapper(props) {
       },
       modes: modes,
       defaultMode: 'draw_polygon',
-      styles: MapboxStyle.styles
+      // styles: MapboxStyle.styles
     });
-    console.log(draw.current);
   
     map.current.addControl(draw.current);
 
@@ -122,17 +120,17 @@ export default function Mapper(props) {
       //remove for loop
       for (const f of e.features) {
         changeColor(f.id);
-        // axios.post('https://possum-portal-fe967e747104.herokuapp.com/api/trash', {
-        //   id: f.id,
-        //   type: "Feature",
-        //   properties: {
-        //     category: "trash",
-        //     notes: "",
-        //     user: "Matt",
-        //     date: "6/27/2023"
-        //   },
-        //   geometry: {coordinates: f.geometry.coordinates, type: "Polygon"}
-        // });
+        axios.post('https://possum-portal-fe967e747104.herokuapp.com/api/trash', {
+          id: f.id,
+          type: "Feature",
+          properties: {
+            category: "trash",
+            notes: "",
+            user: "Matt",
+            date: "6/27/2023"
+          },
+          geometry: {coordinates: f.geometry.coordinates, type: "Polygon"}
+        });
       }
       let newPoly = e.features[0];
       newPoly.properties.user = "Matt"
@@ -173,7 +171,7 @@ export default function Mapper(props) {
     
     const onDelete = (e) => {
       for (const f of e.features) {
-        axios.delete(`https://possum-portal-fe967e747104.herokuapp.com/api/trash/${f.id}`);
+        axios.delete(`http://localhost:8080/api/project/${f.id}`);
       }
 
       setPolygonFeatures(currFeatures => {
@@ -190,15 +188,13 @@ export default function Mapper(props) {
     map.current.on('draw.update', onUpdate);
 
     const getTrashPolygons = async () => {
-      const results = await axios('https://possum-portal-fe967e747104.herokuapp.com/api/trash');
-      console.log(results);
+      const results = await axios('http://localhost:8080/api/project');
       let pgId;
       for (let id in results.data) {
         pgId = draw.current.add(results.data[id]);
       }
       setPolygonFeatures(results.data);
     };
-
     getTrashPolygons();
        
     map.current.on('idle', function() {
@@ -228,7 +224,7 @@ export default function Mapper(props) {
   useEffect(() => {
     if (map.current && props.notesCreated && cont) {
       const getTrashPolygons = async () => {
-        const results = await axios('https://possum-portal-fe967e747104.herokuapp.com/api/trash');
+        const results = await axios('http://localhost:8080/api/project');
         let pgId;
         for (let id in results.data) {
           pgId = draw.current.add(results.data[id]);
@@ -239,7 +235,7 @@ export default function Mapper(props) {
       getTrashPolygons();
     }
   });
-  console.log(polygonFeatures)
+
   return (
     <>
       <ProjectsMenu projects={polygonFeatures} drawerOpen={props.drawerOpen} drawerWidth={drawerWidth}/>

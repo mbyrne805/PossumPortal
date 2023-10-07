@@ -44,16 +44,15 @@ export default function ProjectsMenu(props) {
 
   const [open, setOpen] = React.useState(false);
   const [details, setDetails] = React.useState(false);
-  const [projectName, setProjectName] = React.useState("");
+  const [project, setProject] = React.useState("");
 
   const handleOpen = () => {
     setOpen(!open);
   }
 
-  const handleDetailsSelect = (projectName) => {
-    console.log(projectName);
+  const handleDetailsSelect = (project) => {
     setDetails(!details);
-    setProjectName(projectName)
+    setProject(project)
   }
 
   const projectTypes = ["Personal", "Groups", "Public"];
@@ -61,7 +60,6 @@ export default function ProjectsMenu(props) {
     return props.projects[key];
   });
   projectsArr = _.sortBy(projectsArr, o => o.properties.projectName);
-
   return (
     <Drawer
       sx={{
@@ -84,7 +82,7 @@ export default function ProjectsMenu(props) {
     {details ? <ProjectDetails
       projNum={1}
       handleDetailsSelect={handleDetailsSelect}
-      projectName={projectName}
+      project={project}
     /> :
     <>
       <DrawerHeader sx={{display: "flex", justifyContent: "center"}}>
@@ -114,18 +112,17 @@ export default function ProjectsMenu(props) {
             </ListItemButton>
             {open && projectType === "Personal" &&
               projectsArr.map((project) => {
-                console.log(project)
                 return(
                   <ListItemButton
-                    key={project.projectName}
+                    key={project.properties.projectName}
                     sx={{ py: "0.5rem", minHeight: 32, color: 'rgba(255,255,255,.8)' }}
-                    onClick={() => handleDetailsSelect(project.properties.projectName)}
+                    onClick={() => handleDetailsSelect(project)}
                   >
                     {/* <ListItemIcon sx={{ color: 'inherit' }}>
                       {item.icon}
                     </ListItemIcon> */}
                     <ListItemText
-                      primary={`${project.properties.projectName}`}
+                      primary={project.properties.projectName ? `${project.properties.projectName}` : "New Project"}
                       primaryTypographyProps={{ fontSize: 14, fontWeight: 'medium' }}
                     />
                   </ListItemButton>

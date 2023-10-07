@@ -49,7 +49,6 @@ public class MapServiceImpl implements MapService {
     public Optional<HashMap<String, ProjectGeoJSON>> getAllProjects() {
         HashMap<String, ProjectGeoJSON> trashResults = new HashMap<>();
         List<Project> projectList = projectRepo.findAll();
-        List<ProjectGeoJSON> projectGeoJSONS = new ArrayList<>(projectList.size());
         for (int i = 0; i < projectList.size(); i++) {
             trashResults.put(projectList.get(i).getId(), new ProjectGeoJSON(
                 projectList.get(i).getId(),
