@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.Optional;
 
 @RestController
-@CrossOrigin("http://localhost:3000")
+@CrossOrigin("*")
 @RequestMapping("/api")
 public class MainController {
     private final MapService mapService;

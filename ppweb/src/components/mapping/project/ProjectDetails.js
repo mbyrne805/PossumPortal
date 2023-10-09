@@ -21,33 +21,7 @@ import Dns from '@mui/icons-material/Dns';
 import Public from '@mui/icons-material/Public';
 import Recommend from '@mui/icons-material/Recommend';
 import Sell from '@mui/icons-material/Sell';
-
-const testTags = [
-  {
-    projectName: "Project 1",
-    name: "Eco"
-  },
-  {
-    projectName: "Project 1",
-    name: "Trash"
-  },
-  {
-    projectName: "Project 1",
-    name: "Govt"
-  },
-  {
-    projectName: "Project 1",
-    name: "Public"
-  }
-];
-
-const data = [
-  { icon: <Sell />, label: 'Tags' },
-  { icon: <Dns />, label: 'Details' },
-  { icon: <JoinFull />, label: 'Connections' },
-  { icon: <Recommend />, label: 'Recommendations' },
-  { icon: <Public/>, label: "Publish"}
-];
+import { Typography } from '@mui/material';
 
 const DetailsNav = styled(List)({
   '& .MuiListItemButton-root': {
@@ -66,9 +40,21 @@ const DetailsNav = styled(List)({
 export default function ProjectDetails(props) {
   const [infoOpen, setInfoOpen] = React.useState(true);
   const [tagsOpen, setTagsOpen] = React.useState(false);
+  const [detailsOpen, setDetailsOpen] = React.useState(false);
+  const [connsOpen, setConnsOpen] = React.useState(false);
+  const [recsOpen, setRecsOpen] = React.useState(false);
+  const [pubOpen, setPubOpen] = React.useState(false);
 
-  console.log(props);
+  const data = [
+    { icon: <Sell />, label: 'Tags', opener: () => setTagsOpen(!tagsOpen) },
+    { icon: <Dns />, label: 'Details', opener: () => setDetailsOpen(!detailsOpen) },
+    { icon: <JoinFull />, label: 'Connections', opener: () => setConnsOpen(!connsOpen) },
+    { icon: <Recommend />, label: 'Recommendations', opener: () => setRecsOpen(!recsOpen) },
+    { icon: <Public/>, label: "Publish", opener: () => setPubOpen(!pubOpen) }
+  ];
 
+  console.log(props)
+  
   return (
     <Box sx={{ display: 'flex' }}>
       <ThemeProvider
@@ -89,18 +75,18 @@ export default function ProjectDetails(props) {
       >
         <Paper elevation={0} sx={{ width: 400 }}>
           <DetailsNav component="nav" disablePadding>
-            <ListItem>
               {/* <ListItemIcon sx={{ fontSize: 50 }}>{"\u25bc"}</ListItemIcon> */}
+              {/* <Card sx={{display: "flex", justifyContent: "center", marginX: 10, marginY: 1}}> */}
               <ListItemText
-                sx={{ my: 0, textAlign: "center" }}
+                sx={{ my: 2, textAlign: "center" }}
                 primary={props.project.properties.projectName}
                 primaryTypographyProps={{
-                  fontSize: "1.5rem",
+                  fontSize: "1.25rem",
                   fontWeight: 'medium',
                   letterSpacing: 0,
                 }}
               />
-            </ListItem>
+              {/* </Card> */}
             <Divider />
             <ListItem component="div" disablePadding>
               <ListItemButton sx={{ height: 56 }} onClick={props.handleDetailsSelect}>
@@ -202,7 +188,7 @@ export default function ProjectDetails(props) {
                       <ListItemButton
                         key={item.label}
                         sx={{ py: "0.5rem", minHeight: 32, color: 'rgba(255,255,255,.8)' }}
-                        onClick={() => setTagsOpen(!tagsOpen)}
+                        onClick={item.opener}
                       >
                       <ListItemIcon sx={{ color: 'inherit' }}>
                         {item.icon}
@@ -240,7 +226,18 @@ export default function ProjectDetails(props) {
                         </ListItem> :
                         <></>
                       }
-                      <Divider />
+                      {detailsOpen && item.label === "Details" ?
+                        <ListItem>
+                          <Card
+                            sx={{padding: 2, boxShadow: 5}}
+                          >
+                            {
+                              props.project.properties.details
+                            }
+                          </Card>
+                        </ListItem> :
+                        <></>
+                      }
                     </>
                   )})}
             </Box>

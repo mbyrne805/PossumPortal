@@ -20,10 +20,7 @@ export default function PolygonCreationDialog(props) {
 
   const [projName, setProjName] = useState("");
   const [details, setDetails] = useState("");
-  const [newTag, setNewTag] = useState("");
-
   const [tag, setTag] = useState("");
-
   const [tags, setTags] = useState([
     "Eco",
     "Public",
@@ -57,7 +54,7 @@ export default function PolygonCreationDialog(props) {
     console.log(newPoly)
     const dateTime = new Date().toLocaleString([], { hour12: false }
     );
-    axios.post(`http://localhost:8080/api/project`, {
+    axios.post(`https://possum-portal-fe967e747104.herokuapp.com/api/project`, {
       id: newPoly.current.id,
       type: "Feature",
       properties: {
@@ -117,7 +114,7 @@ export default function PolygonCreationDialog(props) {
                 variant="outlined"
                 placeholder="Details"
                 value={details}
-                onChange={onProjChange}
+                onChange={onDetailsChange}
                 sx={{marginBottom: "1rem", width: 300}}
               />
             </Stack>
