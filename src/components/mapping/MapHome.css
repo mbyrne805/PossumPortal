@@ -1,0 +1,50 @@
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+.base-container {
+  display: grid;
+  /* grid-template-columns: auto;
+  grid-template-rows: auto; */
+  grid-template-areas: 
+    "top-bar top-bar"
+    "logo-anim slideshow-anim"
+    "mapping ."
+}
+
+.top-bar {
+  grid-area: top-bar;
+  background-color: #9b42f5;
+}
+
+.app-bar {
+  position: relative;
+}
+
+.logo-anim {
+  grid-area: logo-anim;
+}
+
+.slideshow-anim {
+  grid-area: slideshow-anim;
+}
+
+.mapping {
+  grid-area: mapping;
+}
