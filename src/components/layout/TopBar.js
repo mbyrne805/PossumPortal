@@ -40,10 +40,6 @@ function TopBar(props) {
     setAnchorElUser(null);
   };
 
-  // const trigger = useScrollTrigger({});
-
-  console.log(props.trigger);
-
   return (
     <AppBar sx={{bgcolor: props.trigger ? "rgb(5, 30, 52)" : "transparent"}}>
       <Container maxWidth={false}>
