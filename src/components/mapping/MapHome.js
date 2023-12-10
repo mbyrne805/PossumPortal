@@ -78,8 +78,6 @@ function MapHome(props) {
     document.getElementsByClassName("mapbox-ctrl-group")[0].style.display = false;
   }
 
-  console.log(action);
-//https://stackoverflow.com/questions/1776915/how-can-i-center-an-absolutely-positioned-element-in-a-div
   return (
     <>
       <Mapper
