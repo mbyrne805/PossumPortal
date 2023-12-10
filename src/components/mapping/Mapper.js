@@ -31,7 +31,7 @@ const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'drawerOpen'
     height: "100vh"
   }),
 );
-console.log(process.env);
+
 mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_ACCESS_TOKEN;
 
 export default function Mapper(props) {
