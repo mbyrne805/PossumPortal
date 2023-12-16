@@ -4,7 +4,6 @@ import { styled, useTheme } from '@mui/material/styles';
 import axios from 'axios';
 import mapboxgl from '!mapbox-gl'; // eslint-disable-line import/no-webpack-loader-syntax
 import MapboxDraw from '@mapbox/mapbox-gl-draw';
-import MapboxStyle from './style/DrawStyle';
 import PolygonPopup from './draw/PolygonPopup';
 import ProjectsMenu from './project/ProjectsMenu';
 
@@ -83,11 +82,6 @@ export default function Mapper(props) {
     });
   
     map.current.addControl(draw.current);
-
-
-    map.current.on('load', function() {
-      draw.current.changeMode('static');
-    });
 
     document.getElementsByClassName('mapboxgl-ctrl-group')[0].style.display = 'none'
 

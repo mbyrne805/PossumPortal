@@ -1,26 +1,13 @@
 import * as React from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 import {
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
-  Button,
   Drawer,
   List,
   Typography,
   Divider,
-  IconButton,
-  ListItem,
   ListItemButton,
-  ListItemIcon,
   ListItemText,
-  Stack,
 } from '@mui/material';
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import MailIcon from '@mui/icons-material/Mail';
 import _ from 'lodash';
 import ProjectDetails from './ProjectDetails.js';
 
@@ -37,7 +24,6 @@ export default function ProjectsMenu(props) {
     display: 'flex',
     alignItems: 'center',
     padding: theme.spacing(0, 1),
-    // necessary for content to be below app bar
     ...theme.mixins.toolbar,
     justifyContent: 'flex-end',
   }));
@@ -87,9 +73,6 @@ export default function ProjectsMenu(props) {
     <>
       <DrawerHeader sx={{display: "flex", justifyContent: "center"}}>
         <Typography color="white" variant="h5" fontWeight="bold">Current Projects</Typography>
-        {/* <IconButton onClick={props.handleDrawerClose}>
-          {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
-        </IconButton> */}
       </DrawerHeader>
       <Divider sx={{bgcolor: "gray", marginX: 2}} />
       {projectTypes.map((projectType) => {
@@ -97,7 +80,7 @@ export default function ProjectsMenu(props) {
           <ProjectsList>
             <ListItemButton
               sx={{display: "flex", justifyContent: "center", textAlign: "center"}}
-              onClick={handleOpen}
+              onClick={ projectType == "Personal" ? handleOpen : () => {}}
               >
               <ListItemText
                 sx={{ my: 0 }}
@@ -118,9 +101,6 @@ export default function ProjectsMenu(props) {
                     sx={{ py: "0.5rem", minHeight: 32, color: 'rgba(255,255,255,.8)' }}
                     onClick={() => handleDetailsSelect(project)}
                   >
-                    {/* <ListItemIcon sx={{ color: 'inherit' }}>
-                      {item.icon}
-                    </ListItemIcon> */}
                     <ListItemText
                       primary={project.properties.projectName ? `${project.properties.projectName}` : "New Project"}
                       primaryTypographyProps={{ fontSize: 14, fontWeight: 'medium' }}

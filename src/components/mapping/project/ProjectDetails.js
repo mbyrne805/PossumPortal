@@ -209,7 +209,7 @@ export default function ProjectDetails(props) {
                       {tagsOpen && item.label === "Tags" ?
                         <ListItem>
                           <Card
-                            sx={{padding: 2, boxShadow: 5}}
+                            sx={{padding: 2, boxShadow: 0}}
                           >
                             {
                               props.project.properties.tags.map((tag) => {
@@ -229,7 +229,7 @@ export default function ProjectDetails(props) {
                       {detailsOpen && item.label === "Details" ?
                         <ListItem>
                           <Card
-                            sx={{padding: 2, boxShadow: 5}}
+                            sx={{padding: 2, boxShadow: 0}}
                           >
                             {
                               props.project.properties.details

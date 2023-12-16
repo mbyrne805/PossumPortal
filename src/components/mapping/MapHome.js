@@ -89,7 +89,6 @@ function MapHome(props) {
         newPoly={newPoly}
         notesCreated={notesCreated}/>
       <AppsButton />
-      {action === "geometry" ? <CategorySelect category={category} handleChange={handleCategoryChange} /> : <></>}
       <ActionMenu handleChange={handleActionChange} handleDrawerOpen={handleDrawerOpen} />
       <PolygonCreationDialog
         open={open}
