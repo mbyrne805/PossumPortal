@@ -70,7 +70,6 @@ export default function Mapper(props) {
       displayControlsDefault: false,
       controls: {
         point: true,
-        line_string: true,
         polygon: true,
         combine_features: true,
         uncombine_features: true,

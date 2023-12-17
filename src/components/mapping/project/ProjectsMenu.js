@@ -80,7 +80,7 @@ export default function ProjectsMenu(props) {
           <ProjectsList>
             <ListItemButton
               sx={{display: "flex", justifyContent: "center", textAlign: "center"}}
-              onClick={ projectType == "Personal" ? handleOpen : () => {}}
+              onClick={ projectType === "Personal" ? handleOpen : () => {}}
               >
               <ListItemText
                 sx={{ my: 0 }}
@@ -98,7 +98,7 @@ export default function ProjectsMenu(props) {
                 return(
                   <ListItemButton
                     key={project.properties.projectName}
-                    sx={{ py: "0.5rem", minHeight: 32, color: 'rgba(255,255,255,.8)' }}
+                    sx={{ py: "0.5rem", minHeight: 32, color: 'rgba(255,255,255,.8)', textAlign: "center" }}
                     onClick={() => handleDetailsSelect(project)}
                   >
                     <ListItemText
