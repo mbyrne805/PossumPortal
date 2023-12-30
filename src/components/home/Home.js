@@ -50,7 +50,7 @@ export default function Home() {
               src={naturgemalde}
             />
           </Grid>
-          <Intro />
+          {/* <Intro /> */}
         </Grid>
         {/* <SectionIntro /> */}
         <Copyright sx={{ pt: 4 }} />
