@@ -38,22 +38,15 @@ export default function Home() {
           flexGrow: 1,
         }}>
         <Grid container justifyContent="center">
-          <Grid item xs={12}>
-            {/* <Box 
-              component="img"
-              sx={{
-                height: 500,
-                width: 500
-              }}
-            /> */}
+          {/* <Grid item xs={12}>
             <Image
               src={naturgemalde}
             />
-          </Grid>
-          {/* <Intro /> */}
+          </Grid> */}
+          <Intro />
         </Grid>
         {/* <SectionIntro /> */}
-        <Copyright sx={{ pt: 4 }} />
+        {/* <Copyright sx={{ pt: 4 }} /> */}
       </Box>
     </Box>
   );
