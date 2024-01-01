@@ -17,7 +17,7 @@ import { ReactComponent as PPLogo } from '../../assets/pplogowhite.svg';
 import { Link } from 'react-router-dom';
 
 const accountPages = ['Log in', 'Sign up'];
-const generalPages = ['Home', 'Community', 'Maps', 'Modeling'];
+const generalPages = ['Home', 'Community', 'Maps'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 function TopBar(props) {
